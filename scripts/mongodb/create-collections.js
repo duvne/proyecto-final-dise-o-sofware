@@ -1,0 +1,1 @@
+load("scripts/mongodb/apply-schemas.js");
