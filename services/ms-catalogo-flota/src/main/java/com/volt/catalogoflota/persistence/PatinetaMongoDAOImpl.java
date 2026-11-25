@@ -1,5 +1,7 @@
 package com.volt.catalogoflota.persistence;
 
+import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +17,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Sorts;
+import com.mongodb.client.model.Updates;
 import com.volt.catalogoflota.document.PatinetaDocument;
 import com.volt.catalogoflota.document.PuntoEntregaDocument;
 import com.volt.catalogoflota.document.TarifaDocument;
@@ -33,9 +36,36 @@ public class PatinetaMongoDAOImpl implements IPatinetaDAO {
 	@Override
 	public PatinetaDocument guardar(PatinetaDocument patineta) {
 		String id = patineta.id() == null ? java.util.UUID.randomUUID().toString() : patineta.id();
-		Document document = toDocument(patineta, id);
+		Instant now = Instant.now();
+		PatinetaDocument persisted = new PatinetaDocument(
+				id, patineta.idPropietario(), patineta.categoria(), patineta.marca(), patineta.modelo(),
+				patineta.autonomiaKm(), patineta.velocidadMaxima(), patineta.estadoFisico(),
+				patineta.estadoPublicacion(), patineta.activa(), patineta.tarifa(), patineta.puntoEntrega(),
+				patineta.fotos(), patineta.documentos(), patineta.observacionesModeracion(),
+				patineta.enMantenimiento(), patineta.calificacionPromedio(), patineta.totalCalificaciones(),
+				patineta.fechaRegistro() == null ? now : patineta.fechaRegistro(), now);
+		Document document = toDocument(persisted);
 		collection.insertOne(document);
 		return fromDocument(document);
+	}
+
+	@Override
+	public PatinetaDocument actualizar(PatinetaDocument patineta) {
+		PatinetaDocument persisted = new PatinetaDocument(
+				patineta.id(), patineta.idPropietario(), patineta.categoria(), patineta.marca(), patineta.modelo(),
+				patineta.autonomiaKm(), patineta.velocidadMaxima(), patineta.estadoFisico(),
+				patineta.estadoPublicacion(), patineta.activa(), patineta.tarifa(), patineta.puntoEntrega(),
+				patineta.fotos(), patineta.documentos(), patineta.observacionesModeracion(),
+				patineta.enMantenimiento(), patineta.calificacionPromedio(), patineta.totalCalificaciones(),
+				patineta.fechaRegistro(), Instant.now());
+		collection.replaceOne(Filters.eq("_id", persisted.id()), toDocument(persisted));
+		return persisted;
+	}
+
+	@Override
+	public Optional<PatinetaDocument> buscarPorId(String id) {
+		return Optional.ofNullable(collection.find(Filters.eq("_id", id)).first())
+				.map(PatinetaMongoDAOImpl::fromDocument);
 	}
 
 	@Override
@@ -50,18 +80,39 @@ public class PatinetaMongoDAOImpl implements IPatinetaDAO {
 	public List<PatinetaDocument> listarActivas(String categoria) {
 		Bson filter = categoria == null || categoria.isBlank()
 				? Filters.eq("activa", true)
-				: Filters.and(
-						Filters.eq("activa", true),
-						textEquals("categoria", categoria));
+				: Filters.and(Filters.eq("activa", true), textEquals("categoria", categoria));
 		return collection.find(filter)
+				.sort(Sorts.ascending("marca", "modelo"))
 				.map(PatinetaMongoDAOImpl::fromDocument)
 				.into(new ArrayList<>());
+	}
+
+	@Override
+	public List<PatinetaDocument> listarPorPropietario(String idPropietario) {
+		return collection.find(Filters.eq("id_propietario", idPropietario))
+				.sort(Sorts.descending("fecha_registro"))
+				.map(PatinetaMongoDAOImpl::fromDocument)
+				.into(new ArrayList<>());
+	}
+
+	@Override
+	public PatinetaPage listarPendientes(int pagina, int tamano) {
+		Bson filter = Filters.eq("estado_publicacion", "EN_REVISION");
+		long total = collection.countDocuments(filter);
+		List<PatinetaDocument> elementos = collection.find(filter)
+				.sort(Sorts.ascending("fecha_actualizacion"))
+				.skip(Math.max(0, pagina) * tamano)
+				.limit(tamano)
+				.map(PatinetaMongoDAOImpl::fromDocument)
+				.into(new ArrayList<>());
+		return new PatinetaPage(elementos, total, pagina, tamano);
 	}
 
 	@Override
 	public PatinetaPage buscarActivas(FiltroPatinetas filtros) {
 		List<Bson> criteria = new ArrayList<>();
 		criteria.add(Filters.eq("activa", true));
+		criteria.add(Filters.eq("en_mantenimiento", false));
 		if (filtros.categoria() != null && !filtros.categoria().isBlank()) {
 			criteria.add(textEquals("categoria", filtros.categoria()));
 		}
@@ -69,35 +120,43 @@ public class PatinetaMongoDAOImpl implements IPatinetaDAO {
 			criteria.add(textEquals("punto_entrega.zona.ciudad", filtros.ciudad()));
 		}
 		if (filtros.precioHoraMaximo() != null) {
-			criteria.add(Filters.lte(
-					"tarifa.valor_hora",
-					new Decimal128(filtros.precioHoraMaximo())));
+			criteria.add(Filters.lte("tarifa.valor_hora", new Decimal128(filtros.precioHoraMaximo())));
 		}
 		if (filtros.autonomiaMinimaKm() != null) {
 			criteria.add(Filters.gte("autonomia_km", filtros.autonomiaMinimaKm()));
 		}
+		if (!filtros.idsExcluidos().isEmpty()) {
+			criteria.add(Filters.nin("_id", filtros.idsExcluidos()));
+		}
 
 		Bson filter = Filters.and(criteria);
 		long total = collection.countDocuments(filter);
-		int skip = Math.multiplyExact(filtros.pagina(), filtros.tamano());
 		List<PatinetaDocument> patinetas = collection.find(filter)
-				.sort(Sorts.ascending("_id"))
-				.skip(skip)
+				.sort(Sorts.ascending("marca", "modelo"))
+				.skip(Math.max(0, filtros.pagina()) * filtros.tamano())
 				.limit(filtros.tamano())
 				.map(PatinetaMongoDAOImpl::fromDocument)
 				.into(new ArrayList<>());
 		return new PatinetaPage(patinetas, total, filtros.pagina(), filtros.tamano());
 	}
 
+	@Override
+	public void actualizarCalificacion(String id, double promedio, int totalCalificaciones) {
+		collection.updateOne(Filters.eq("_id", id), Updates.combine(
+				Updates.set("calificacion_promedio", promedio),
+				Updates.set("total_calificaciones", totalCalificaciones),
+				Updates.set("fecha_actualizacion", Instant.now().toString())));
+	}
+
 	private static Bson textEquals(String field, String value) {
 		return Filters.regex(field, "^" + Pattern.quote(value.trim()) + "$", "i");
 	}
 
-	private static Document toDocument(PatinetaDocument patineta, String id) {
+	private static Document toDocument(PatinetaDocument patineta) {
 		TarifaDocument tarifa = patineta.tarifa();
 		PuntoEntregaDocument punto = patineta.puntoEntrega();
 		ZonaDocument zona = punto.zona();
-		return new Document("_id", id)
+		return new Document("_id", patineta.id())
 				.append("id_propietario", patineta.idPropietario())
 				.append("categoria", patineta.categoria())
 				.append("marca", patineta.marca())
@@ -107,6 +166,14 @@ public class PatinetaMongoDAOImpl implements IPatinetaDAO {
 				.append("estado_fisico", patineta.estadoFisico())
 				.append("estado_publicacion", patineta.estadoPublicacion())
 				.append("activa", patineta.activa())
+				.append("fotos", patineta.fotos())
+				.append("documentos", patineta.documentos())
+				.append("observaciones_moderacion", patineta.observacionesModeracion())
+				.append("en_mantenimiento", patineta.enMantenimiento())
+				.append("calificacion_promedio", patineta.calificacionPromedio())
+				.append("total_calificaciones", patineta.totalCalificaciones())
+				.append("fecha_registro", patineta.fechaRegistro().toString())
+				.append("fecha_actualizacion", patineta.fechaActualizacion().toString())
 				.append("tarifa", new Document("valor_hora", new Decimal128(tarifa.valorHora()))
 						.append("valor_dia", new Decimal128(tarifa.valorDia()))
 						.append("valor_deposito", new Decimal128(tarifa.valorDeposito())))
@@ -148,7 +215,19 @@ public class PatinetaMongoDAOImpl implements IPatinetaDAO {
 						new ZonaDocument(
 								integer(zona, "id_zona"),
 								zona.getString("nombre"),
-								zona.getString("ciudad"))));
+								zona.getString("ciudad"))),
+				document.getList("fotos", String.class, List.of()),
+				document.getList("documentos", String.class, List.of()),
+				document.getString("observaciones_moderacion"),
+				Boolean.TRUE.equals(document.getBoolean("en_mantenimiento")),
+				document.getDouble("calificacion_promedio") == null ? 0.0 : document.getDouble("calificacion_promedio"),
+				document.getInteger("total_calificaciones", 0),
+				instant(document.getString("fecha_registro")),
+				instant(document.getString("fecha_actualizacion")));
+	}
+
+	private static Instant instant(String value) {
+		return value == null ? Instant.now() : Instant.parse(value);
 	}
 
 	private static Document requireEmbedded(Document document, String field) {
@@ -169,7 +248,7 @@ public class PatinetaMongoDAOImpl implements IPatinetaDAO {
 		return value == null ? null : value.longValue();
 	}
 
-	private static java.math.BigDecimal decimal(Document document, String field) {
+	private static BigDecimal decimal(Document document, String field) {
 		Object value = document.get(field);
 		if (value == null) {
 			return null;
@@ -177,11 +256,11 @@ public class PatinetaMongoDAOImpl implements IPatinetaDAO {
 		if (value instanceof Decimal128 decimal128) {
 			return decimal128.bigDecimalValue();
 		}
-		if (value instanceof java.math.BigDecimal bigDecimal) {
+		if (value instanceof BigDecimal bigDecimal) {
 			return bigDecimal;
 		}
 		if (value instanceof Number number) {
-			return java.math.BigDecimal.valueOf(number.doubleValue());
+			return BigDecimal.valueOf(number.doubleValue());
 		}
 		throw new IllegalStateException("El campo de tarifa contiene un tipo BSON no numerico: " + field);
 	}

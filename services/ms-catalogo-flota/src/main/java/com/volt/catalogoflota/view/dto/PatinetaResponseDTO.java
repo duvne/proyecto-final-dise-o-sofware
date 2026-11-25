@@ -1,5 +1,8 @@
 package com.volt.catalogoflota.view.dto;
 
+import java.time.Instant;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.volt.catalogoflota.document.PatinetaDocument;
 
@@ -15,7 +18,20 @@ public record PatinetaResponseDTO(
 		@JsonProperty("estado_publicacion") String estadoPublicacion,
 		boolean activa,
 		TarifaDTO tarifa,
-		@JsonProperty("punto_entrega") PuntoEntregaDTO puntoEntrega) {
+		@JsonProperty("punto_entrega") PuntoEntregaDTO puntoEntrega,
+		List<String> fotos,
+		List<String> documentos,
+		@JsonProperty("observaciones_moderacion") String observacionesModeracion,
+		@JsonProperty("en_mantenimiento") boolean enMantenimiento,
+		@JsonProperty("calificacion_promedio") double calificacionPromedio,
+		@JsonProperty("total_calificaciones") int totalCalificaciones,
+		@JsonProperty("fecha_registro") Instant fechaRegistro,
+		@JsonProperty("fecha_actualizacion") Instant fechaActualizacion) {
+
+	public PatinetaResponseDTO {
+		fotos = List.copyOf(fotos);
+		documentos = List.copyOf(documentos);
+	}
 
 	public static PatinetaResponseDTO desde(PatinetaDocument document) {
 		var tarifa = document.tarifa();
@@ -39,6 +55,14 @@ public record PatinetaResponseDTO(
 						punto.latitud(),
 						punto.longitud(),
 						punto.verificado(),
-						new ZonaDTO(zona.idZona(), zona.nombre(), zona.ciudad())));
+						new ZonaDTO(zona.idZona(), zona.nombre(), zona.ciudad())),
+				document.fotos(),
+				document.documentos(),
+				document.observacionesModeracion(),
+				document.enMantenimiento(),
+				document.calificacionPromedio(),
+				document.totalCalificaciones(),
+				document.fechaRegistro(),
+				document.fechaActualizacion());
 	}
 }

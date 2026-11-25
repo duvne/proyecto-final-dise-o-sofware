@@ -8,6 +8,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -16,46 +18,45 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.volt.catalogoflota.document.CategoriaDocument;
 import com.volt.catalogoflota.document.PatinetaDocument;
 import com.volt.catalogoflota.document.PuntoEntregaDocument;
 import com.volt.catalogoflota.document.TarifaDocument;
 import com.volt.catalogoflota.document.ZonaDocument;
+import com.volt.catalogoflota.persistence.ICategoriaDAO;
 import com.volt.catalogoflota.persistence.IPatinetaDAO;
 import com.volt.catalogoflota.view.dto.PatinetaRequestDTO;
+import com.volt.catalogoflota.view.dto.PatinetaResponseDTO;
 import com.volt.catalogoflota.view.dto.PuntoEntregaDTO;
 import com.volt.catalogoflota.view.dto.TarifaDTO;
 import com.volt.catalogoflota.view.dto.ZonaDTO;
+import com.volt.shared.security.TokenPrincipal;
 
 @ExtendWith(MockitoExtension.class)
 class PatinetaServiceTest {
 	@Mock
 	private IPatinetaDAO patinetaDAO;
+	@Mock
+	private ICategoriaDAO categoriaDAO;
+	@Mock
+	private com.volt.shared.audit.AuditoriaService auditoriaService;
 
 	@InjectMocks
 	private PatinetaService patinetaService;
 
 	@Test
 	void nuevaPatinetaSeGuardaComoBorradorNoVisibleEnCatalogo() {
+		when(categoriaDAO.buscarPorNombre("Urbana")).thenReturn(Optional.of(new CategoriaDocument(
+				"cat-1", "Urbana", " urbano ", 20.0, true)));
 		when(patinetaDAO.guardar(any(PatinetaDocument.class))).thenAnswer(invocation -> {
 			PatinetaDocument document = invocation.getArgument(0);
-			return new PatinetaDocument(
-					"patineta-1",
-					document.idPropietario(),
-					document.categoria(),
-					document.marca(),
-					document.modelo(),
-					document.autonomiaKm(),
-					document.velocidadMaxima(),
-					document.estadoFisico(),
-					document.estadoPublicacion(),
-					document.activa(),
-					document.tarifa(),
-					document.puntoEntrega());
+			return document;
 		});
 
-		var created = patinetaService.crearBorrador(request());
+		var created = patinetaService.crearBorrador(request(), principal(), "127.0.0.1");
 
-		assertEquals("patineta-1", created.id());
+		assertFalse(created.id().isBlank());
+		assertEquals("propietario-1", created.idPropietario());
 		assertEquals("BORRADOR", created.estadoPublicacion());
 		assertFalse(created.activa());
 		verify(patinetaDAO).guardar(any(PatinetaDocument.class));
@@ -68,9 +69,13 @@ class PatinetaServiceTest {
 		assertThrows(PatinetaNoEncontradaException.class, () -> patinetaService.obtenerActiva("missing"));
 	}
 
+	private static TokenPrincipal principal() {
+		return new TokenPrincipal("propietario-1", "propietario-1@example.com",
+				List.of("PROPIETARIO"), true);
+	}
+
 	private static PatinetaRequestDTO request() {
 		return new PatinetaRequestDTO(
-				"propietario-1",
 				"Urbana",
 				"VOLT",
 				"City",
@@ -84,6 +89,14 @@ class PatinetaServiceTest {
 						10.98,
 						-74.80,
 						true,
-						new ZonaDTO(1L, "Norte", "Barranquilla")));
+						new ZonaDTO(1L, "Norte", "Barranquilla")),
+				List.of(),
+				List.of());
+	}
+
+	@SuppressWarnings("unused")
+	private static final class Aux {
+		private Aux() {
+		}
 	}
 }

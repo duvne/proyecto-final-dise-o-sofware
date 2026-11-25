@@ -16,5 +16,7 @@ public record RegistroUsuarioRequest(
 		@NotBlank @Email @Size(max = 254) String correo,
 		@NotBlank @Size(min = 12, max = 72) String contrasena,
 		@NotBlank @Size(max = 30) String telefono,
-		@JsonProperty("fecha_nacimiento") @NotNull @Past LocalDate fechaNacimiento) {
+		@JsonProperty("fecha_nacimiento") @NotNull @Past LocalDate fechaNacimiento,
+		String rol,
+		@JsonProperty("acepta_tratamiento_datos") boolean aceptaTratamientoDatos) {
 }

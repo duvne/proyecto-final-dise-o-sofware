@@ -10,13 +10,23 @@ const collectionSchemas = [
 					_id: { bsonType: "string" },
 					id_arrendatario: { bsonType: "string" },
 					id_patineta: { bsonType: "string" },
-					id_cupon: { bsonType: "string" },
+					id_propietario: { bsonType: "string" },
+					cupon_codigo: { bsonType: "string" },
 					fecha_inicio: { bsonType: "string" },
 					fecha_fin: { bsonType: "string" },
 					subtotal_alquiler: { bsonType: "number" },
 					descuento_aplicado: { bsonType: "number" },
 					total_alquiler: { bsonType: "number" },
+					recargo_retraso: { bsonType: "number" },
+					penalizacion_propietario: { bsonType: "number" },
 					estado: { bsonType: "string" },
+					fecha_creacion: { bsonType: "string" },
+					fecha_actualizacion: { bsonType: "string" },
+					fecha_check_in: { bsonType: "string" },
+					fecha_checkout: { bsonType: "string" },
+					fecha_liberacion_pago: { bsonType: "string" },
+					disputa_abierta: { bsonType: "bool" },
+					motivo_cancelacion: { bsonType: "string" },
 					pago: {
 						bsonType: "object",
 						properties: {
@@ -132,10 +142,12 @@ const collectionSchemas = [
 				properties: {
 					_id: { bsonType: "string" },
 					codigo: { bsonType: "string" },
-					porcentaje_descuento: { bsonType: "number" },
+					porcentaje: { bsonType: "number" },
 					tope_descuento: { bsonType: "number" },
 					fecha_vencimiento: { bsonType: "string" },
-					activo: { bsonType: "bool" }
+					activo: { bsonType: "bool" },
+					usos: { bsonType: "number" },
+					limite_usos: { bsonType: "number" }
 				}
 			}
 		}
@@ -158,6 +170,14 @@ const collectionSchemas = [
 					estado_fisico: { bsonType: "string" },
 					estado_publicacion: { bsonType: "string" },
 					activa: { bsonType: "bool" },
+					fotos: { bsonType: "array", items: { bsonType: "string" } },
+					documentos: { bsonType: "array", items: { bsonType: "string" } },
+					observaciones_moderacion: { bsonType: "string" },
+					en_mantenimiento: { bsonType: "bool" },
+					calificacion_promedio: { bsonType: "number" },
+					total_calificaciones: { bsonType: "number" },
+					fecha_registro: { bsonType: "string" },
+					fecha_actualizacion: { bsonType: "string" },
 					tarifa: {
 						bsonType: "object",
 						properties: {

@@ -19,6 +19,7 @@
 	<description>Marketplace P2P para alquiler de patinetas electricas</description>
 
 	<modules>
+		<module>shared</module>
 		<module>gateway</module>
 		<module>services/ms-usuarios-auth</module>
 		<module>services/ms-catalogo-flota</module>
@@ -30,6 +31,7 @@
 	<properties>
 		<java.version>25</java.version>
 		<spring-cloud.version>2026.0.0</spring-cloud.version>
+		<springdoc.version>3.2.1</springdoc.version>
 		<maven.compiler.release>${java.version}</maven.compiler.release>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -42,6 +44,16 @@
 				<version>${spring-cloud.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springdoc</groupId>
+				<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+				<version>${springdoc.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.volt</groupId>
+				<artifactId>volt-shared</artifactId>
+				<version>${project.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

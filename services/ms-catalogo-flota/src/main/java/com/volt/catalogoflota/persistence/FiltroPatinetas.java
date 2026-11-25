@@ -1,6 +1,7 @@
 package com.volt.catalogoflota.persistence;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 public record FiltroPatinetas(
 		String categoria,
@@ -8,8 +9,11 @@ public record FiltroPatinetas(
 		BigDecimal precioHoraMaximo,
 		Double autonomiaMinimaKm,
 		int pagina,
-		int tamano) {
+		int tamano,
+		Set<String> idsExcluidos) {
+
 	public FiltroPatinetas {
+		idsExcluidos = idsExcluidos == null ? Set.of() : Set.copyOf(idsExcluidos);
 		if (pagina < 0 || pagina > 10_000) {
 			throw new IllegalArgumentException("La pagina debe estar entre 0 y 10000.");
 		}
@@ -22,5 +26,15 @@ public record FiltroPatinetas(
 		if (autonomiaMinimaKm != null && autonomiaMinimaKm < 0) {
 			throw new IllegalArgumentException("La autonomia minima no puede ser negativa.");
 		}
+	}
+
+	public FiltroPatinetas(
+			String categoria,
+			String ciudad,
+			BigDecimal precioHoraMaximo,
+			Double autonomiaMinimaKm,
+			int pagina,
+			int tamano) {
+		this(categoria, ciudad, precioHoraMaximo, autonomiaMinimaKm, pagina, tamano, Set.of());
 	}
 }
