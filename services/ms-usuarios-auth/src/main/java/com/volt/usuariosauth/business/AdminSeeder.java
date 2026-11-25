@@ -63,6 +63,6 @@ public class AdminSeeder implements ApplicationRunner {
 				List.of(),
 				null);
 		usuarioDAO.guardar(admin);
-		LOG.warn("Usuario administrador inicial creado: {}. Cambia la contrasena en un entorno real.", correo);
+		LOG.warn("Usuario administrador inicial creado: {}. Reemplaza JWT_SECRET, VOLT_INTERNAL_KEY y VOLT_ADMIN_PASSWORD por valores seguros antes de produccion.", correo);
 	}
 }

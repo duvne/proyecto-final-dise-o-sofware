@@ -81,6 +81,16 @@ MAIL_SMTP_HOST=localhost
 | `/api/operaciones/**`, `/api/ops/**`, `/api/incidencias/**` | MS-OperacionesIncidencias |
 | `/api/comunicacion/**` | MS-Comunicacion |
 
+## Seguridad básica
+
+- No guardes el `MONGODB_URI` real ni el `JWT_SECRET` en repositorios: usa `.env` en desarrollo y `.env.example` solo para plantilla.
+- Reemplaza `<db_password>` por una contraseña fuerte y distinta por entorno.
+- Reemplaza `JWT_SECRET` por un valor aleatorio de 32 bytes o más.
+- Si cambias el `JWT_SECRET`, invalida tokens antiguos y revisa a los usuarios deberán iniciar sesión de nuevo.
+- Usa un usuario PostgreSQL con acceso mínimo necesario, preferiblemente sin acceso DDL.
+- En producción, pon todo detrás de HTTPS/TLS (el gateway por defecto es HTTP; put un proxy inverso si no puedes hacerlo dentro de Java).
+- El seeding del admin solo debe crear credenciales temporales en entornos locales; en producción desactiva `volt.seed.admin` y crea el admin desde un entorno seguro.
+
 ## Esquemas MongoDB
 
 Tienes dos opciones:
