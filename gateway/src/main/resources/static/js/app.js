@@ -124,8 +124,45 @@ function safeRedirect(value, fallback = 'index.html') {
   return value;
 }
 
+function updateNavForLoggedInUser() {
+  const token = getStoredToken();
+  const loginButton = document.getElementById('loginButton');
+  if (!token) return;
+  const payload = decodeJwtPayload(token);
+  if (!payload) return;
+  // Fetch user profile to get the name
+  fetchJson('/api/auth/perfil').then(function (user) {
+    const name = user && user.nombre ? user.nombre : (payload.correo || 'Usuario');
+    if (loginButton) {
+      loginButton.textContent = name;
+      loginButton.href = 'perfil.html';
+    }
+    // Hide "Crear cuenta" button when logged in
+    const registerBtn = document.querySelector('a[href="registro.html"].btn');
+    if (registerBtn) registerBtn.hidden = true;
+    // Add logout link
+    const navRight = loginButton ? loginButton.parentElement : null;
+    if (navRight && !document.getElementById('logoutButton')) {
+      const logoutLink = document.createElement('a');
+      logoutLink.id = 'logoutButton';
+      logoutLink.href = '#';
+      logoutLink.textContent = 'Cerrar sesión';
+      logoutLink.addEventListener('click', function (e) {
+        e.preventDefault();
+        clearSession();
+        location.reload();
+      });
+      navRight.appendChild(logoutLink);
+    }
+  }).catch(function () {
+    // Token invalid, clear session
+    clearSession();
+  });
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('[data-admin-only]').forEach(function (element) {
     element.hidden = !isAdmin();
   });
+  updateNavForLoggedInUser();
 });
