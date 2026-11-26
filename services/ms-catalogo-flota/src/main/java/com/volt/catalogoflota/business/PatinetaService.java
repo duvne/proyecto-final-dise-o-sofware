@@ -281,6 +281,12 @@ public class PatinetaService {
 		return PatinetaPageResponseDTO.desde(patinetaDAO.listarPendientes(pagina, tamano));
 	}
 
+	public void eliminar(String id, TokenPrincipal principal, String ip) {
+		obtenerPropia(id, principal);
+		patinetaDAO.eliminar(id);
+		auditar(principal.userId(), "ELIMINAR_PATINETA", id, null, Map.of("id", id), ip);
+	}
+
 	public List<MantenimientoResponse> historialMantenimiento(String id, TokenPrincipal principal) {
 		obtenerPropia(id, principal);
 		return mantenimientoDAO.listarPorPatineta(id).stream().map(MantenimientoResponse::desde).toList();
@@ -296,7 +302,7 @@ public class PatinetaService {
 	}
 
 	private static void validarPropietario(TokenPrincipal principal) {
-		if (!principal.tieneRol("PROPIETARIO")) {
+		if (!principal.esAdministrador() && !principal.tieneRol("PROPIETARIO")) {
 			throw new AccesoDenegadoException("Debes activar el perfil de propietario para publicar patinetas.");
 		}
 		if (!principal.verificado()) {

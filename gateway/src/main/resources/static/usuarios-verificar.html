@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verificar Usuarios | VOLT Admin</title>
+  <link rel="stylesheet" href="css/styles.css?v=6">
+</head>
+
+<body>
+  <header class="topbar" style="background:var(--navy);color:white">
+    <div class="wrap nav"><a class="brand" style="color:white" href="admin.html">VOLT / ADMIN</a>
+      <nav class="navlinks"><a style="color:#fff" href="index.html">Explorar</a><a style="color:#fff" href="admin.html">Panel</a></nav>
+      <div class="navright">
+        <a style="color:#fff" href="#" id="logoutLink">Salir</a>
+        <a class="btn small" href="index.html">Volver</a>
+      </div>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="pagehead">
+      <div class="eyebrow">Usuarios · Moderación</div>
+      <h1>Verificar Usuarios</h1>
+      <p class="sub">Marca usuarios como verificados para habilitar la publicación de patinetas.</p>
+    </section>
+    <div id="error" class="notice"></div>
+    <section class="card boxpad">
+      <h2>Buscar usuario</h2>
+      <div class="formgrid">
+        <div class="field full"><input type="text" id="buscarUsuario" placeholder="ID o correo electrónico"></div>
+        <button class="btn" id="btnBuscar">Buscar</button>
+      </div>
+      <div id="tablaUsuarios" style="display:none">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Correo</th>
+              <th>Verificado</th>
+              <th>Estado</th>
+              <th>Roles</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div class="muted" style="margin-top:10px; display:none" id="msgVacia">No hay usuarios registrados.</div>
+      </div>
+      <div id="usuarioResultado" class="muted"></div>
+      <hr>
+      <div id="formVerificar" hidden>
+        <input type="hidden" id="usuarioId">
+        <div class="field full"><label>¿Acción?</label>
+          <select id="accion">
+            <option value="verificar">Verificar (activar)</option>
+            <option value="rechazar">Rechazar (desactivar)</option>
+            <option value="eliminar">Eliminar (anonimizar)</option>
+          </select></div>
+        <div class="field full"><label>Motivo (opcional)</label><input type="text" id="motivo" placeholder="Ej. Correo validado"></div>
+        <div class="row-actions">
+          <button class="btn" id="btnAplicar">Aplicar acción</button>
+          <button class="btn light" type="button" id="btnCancel">Cancelar</button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="wrap">VOLT · Alquiler entre particulares</div>
+  </footer>
+  <script src="js/app.js?v=5"></script>
+  <script src="js/usuarios-verificar.js?v=1"></script>
+</body>
+
+</html>

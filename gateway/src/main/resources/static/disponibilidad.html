@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Disponibilidad | VOLT</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap nav"><a class="brand" href="index.html">ϟ <b>VOLT</b></a></div>
+  </header>
+  <main class="wrap">
+    <section class="pagehead"><div class="eyebrow">Disponibilidad</div><h2>Patenete en reserva</h2></section>
+    <div id="error" class="notice"></div>
+    <div class="card boxpad" id="calendario"><p class="muted">Cargando disponibilidad...</p></div>
+  </main>
+  <footer class="footer"><div class="wrap">VOLT · Alquiler entre particulares</div></footer>
+  <script src="js/app.js?v=5"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id');
+    (async function(){
+      const c = document.getElementById('calendario');
+      try {
+        const ocupadas = await fetchJson('/api/reservas/disponibilidad/ocupadas?inicio=' + encodeURIComponent(new Date(Date.now()+3600000).toISOString()) + '&fin=' + encodeURIComponent(new Date(Date.now()+6*3600000).toISOString()));
+        c.innerHTML = '<pre>' + JSON.stringify(ocupadas, null, 2) + '</pre>';
+      } catch(e) {
+        if (!getStoredToken()) { location.href = 'login.html?redirect=' + encodeURIComponent(location.pathname); return; }
+        showError(document.getElementById('error'), e.message || 'Sin disponibilidad'); c.innerHTML = '<p class="muted">Sin datos de disponibilidad.</p>';
+      }
+    })();
+  </script>
+</body>
+</html>

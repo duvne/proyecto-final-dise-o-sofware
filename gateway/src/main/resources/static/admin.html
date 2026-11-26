@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Administración | VOLT</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <header class="topbar" style="background:var(--navy);color:white">
+    <div class="wrap nav"><a class="brand" style="color:white" href="admin.html">ϟ <b>VOLT / ADMIN</b></a>
+      <nav class="navlinks"><a style="color:#fff" href="#actas">Actas</a><a style="color:#fff"
+          href="#disputas">Disputas</a><a style="color:#fff" href="#reservas">Reservas</a><a style="color:#fff"
+          href="usuarios-verificar.html">Usuarios</a></nav>
+      <div class="navright"><a style="color:#fff" href="#" id="logoutLink">Salir</a><a class="btn small"
+          href="index.html">Volver al sitio</a></div>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="pagehead">
+      <div class="eyebrow">VOLT / Admin · Moderación</div>
+      <h1>Cola de moderación</h1>
+      <p class="sub">Revisa actas de entrega, disputas y reservas de la plataforma.</p>
+    </section>
+    <div id="error" class="notice"></div>
+    <section class="admin-grid">
+      <div>
+        <div class="pagehead" id="actas" style="padding:0 0 10px">
+          <div class="eyebrow">Entrega y devolución</div>
+          <h2>Actas</h2>
+        </div>
+        <div id="actasLista" class="admin-list"></div>
+      </div>
+      <div>
+        <div class="pagehead" id="disputas" style="padding:0 0 10px">
+          <div class="eyebrow">Conflictos</div>
+          <h2>Disputas</h2>
+        </div>
+        <div id="disputasLista" class="admin-list"></div>
+      </div>
+    </section>
+    <section class="pagehead" id="reservas" style="padding:0 0 10px">
+      <div class="eyebrow">Operación</div>
+      <h2>Reservas</h2>
+    </section>
+    <section id="reservasLista" class="admin-list"></section>
+  </main>
+  <footer class="footer">
+    <div class="wrap">VOLT · Alquiler entre particulares</div>
+  </footer>
+  <script src="js/app.js?v=5"></script>
+  <script>
+    (async function () {
+      const error = document.getElementById('error');
+      if (!getStoredToken()) {
+        location.replace('login.html?redirect=admin.html');
+        return;
+      }
+      if (!isAdmin()) {
+        error.textContent = 'Tu cuenta no tiene permisos de administrador. ';
+        const link = document.createElement('a');
+        link.href = 'login.html?redirect=admin.html';
+        link.textContent = 'Cambiar de cuenta';
+        error.appendChild(link);
+        return;
+      }
+
+      document.getElementById('logoutLink').addEventListener('click', function (event) {
+        event.preventDefault();
+        clearSession();
+        location.href = 'login.html';
+      });
+
+      function escapeHtml(value) {
+        return String(value === undefined || value === null ? '' : value).replace(/[&<>"']/g, function (character) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character];
+        });
+      }
+
+      function row(label, value) {
+        if (value === undefined || value === null || value === '') return '';
+        return '<div class="muted"><b>' + escapeHtml(label) + ':</b> ' + escapeHtml(value) + '</div>';
+      }
+
+      function formatDate(value) {
+        if (!value) return '';
+        const date = new Date(value);
+        return isNaN(date.getTime()) ? value : date.toLocaleString('es-CO');
+      }
+
+      function card(estado, title, rows) {
+        return '<article class="card admin-card"><div class="eyebrow">' + escapeHtml(estado || 'SIN ESTADO') +
+          '</div><b>' + escapeHtml(title) + '</b>' + rows + '</article>';
+      }
+
+      function renderActa(acta) {
+        return card(acta.estado, 'Acta ' + (acta._id || acta.id || ''),
+          row('Reserva', acta.id_reserva) + row('Descripción', acta.descripcion) +
+          row('Observaciones', acta.observaciones));
+      }
+
+      function renderDisputa(disputa) {
+        return card(disputa.estado, 'Disputa ' + (disputa._id || disputa.id || ''),
+          row('Reserva', disputa.id_reserva) + row('Motivo', disputa.motivo) +
+          row('Anotaciones del propietario', disputa.anotaciones_propietario) +
+          row('Anotaciones del arrendatario', disputa.anotaciones_arrendatario) +
+          row('Resolución', disputa.resolucion));
+      }
+
+      function renderReserva(reserva) {
+        return card(reserva.estado, 'Reserva ' + (reserva._id || reserva.id || ''),
+          row('Patineta', reserva.id_patineta) + row('Arrendatario', reserva.id_arrendatario) +
+          row('Propietario', reserva.id_propietario) + row('Inicio', formatDate(reserva.fecha_inicio)) +
+          row('Fin', formatDate(reserva.fecha_fin)) +
+          row('Total alquiler', reserva.total_alquiler == null ? '' : formatMoney(reserva.total_alquiler)) +
+          row('Disputa abierta', reserva.disputa_abierta ? 'Sí' : 'No'));
+      }
+
+      async function cargar(endpoint, target, renderer, emptyMessage) {
+        try {
+          const data = await fetchJson(endpoint);
+          const items = Array.isArray(data) ? data : (data && Array.isArray(data.elementos) ? data.elementos : []);
+          target.innerHTML = items.length
+            ? items.map(renderer).join('')
+            : '<article class="card admin-card"><div class="eyebrow">Sin datos</div><b>' + escapeHtml(emptyMessage) + '</b></article>';
+        } catch (e) {
+          if (e.status === 401) {
+            location.replace('login.html?redirect=admin.html');
+            return;
+          }
+          if (e.status === 403) {
+            showError(error, 'Tu cuenta no tiene permisos de administrador.');
+            return;
+          }
+          showError(error, e.message);
+        }
+      }
+
+      cargar('/api/ops/actas', document.getElementById('actasLista'), renderActa, 'No hay actas registradas.');
+      cargar('/api/ops/disputas', document.getElementById('disputasLista'), renderDisputa, 'No hay disputas registradas.');
+      cargar('/api/reservas/admin/todas', document.getElementById('reservasLista'), renderReserva, 'No hay reservas registradas.');
+    })();
+  </script>
+</body>
+
+</html>

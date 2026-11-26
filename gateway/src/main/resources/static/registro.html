@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crear cuenta | VOLT</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="wrap nav"><a class="brand" href="index.html">ϟ <b>VOLT</b></a>
+      <nav class="navlinks"><a href="index.html">Explorar</a><a href="publicar.html">Publicar patineta</a></nav>
+      <div class="navright"><a href="login.html">Iniciar sesión</a></div>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="pagehead">
+      <div class="eyebrow">Únete a VOLT</div>
+      <h1>Crear cuenta</h1>
+      <p class="sub">Regístrate para reservar patinetas o publicar las tuyas.</p>
+    </section>
+    <section class="card boxpad" style="max-width:720px">
+      <div id="registroError" class="notice"></div>
+      <form id="registroForm">
+        <div class="formgrid">
+          <div class="field full"><label>Nombre completo</label><input name="nombre" maxlength="120" required></div>
+          <div class="field"><label>Documento</label><input name="documento" maxlength="40" required></div>
+          <div class="field"><label>Teléfono</label><input name="telefono" maxlength="30" required></div>
+          <div class="field full"><label>Correo</label><input name="correo" type="email" maxlength="254" required></div>
+          <div class="field"><label>Contraseña</label><input name="contrasena" type="password" minlength="12"
+              maxlength="72" autocomplete="new-password" required></div>
+          <div class="field"><label>Fecha de nacimiento</label><input name="fecha_nacimiento" type="date" required></div>
+          <div class="field full"><label>Tipo de cuenta</label>
+            <select name="rol">
+              <option value="ARRENDATARIO">Quiero alquilar patinetas</option>
+              <option value="PROPIETARIO">Quiero publicar mis patinetas</option>
+            </select>
+          </div>
+          <div class="field full"><label class="check">
+              <input name="acepta_tratamiento_datos" type="checkbox" required>
+              Acepto el tratamiento de mis datos personales
+            </label></div>
+        </div>
+        <div class="row-actions" style="margin-top:18px">
+          <button class="btn" type="submit">Crear cuenta</button>
+          <a class="btn light" href="login.html">Ya tengo cuenta</a>
+        </div>
+      </form>
+    </section>
+  </main>
+  <footer class="footer"><div class="wrap">VOLT · Alquiler entre particulares</div></footer>
+  <script src="js/app.js?v=5"></script>
+  <script>
+    document.getElementById('registroForm').addEventListener('submit', async function (event) {
+      event.preventDefault();
+      const error = document.getElementById('registroError');
+      error.textContent = '';
+      const form = new FormData(event.target);
+      const body = {
+        nombre: form.get('nombre').trim(),
+        documento: form.get('documento').trim(),
+        correo: form.get('correo').trim(),
+        contrasena: form.get('contrasena'),
+        telefono: form.get('telefono').trim(),
+        fecha_nacimiento: form.get('fecha_nacimiento'),
+        rol: form.get('rol'),
+        acepta_tratamiento_datos: form.get('acepta_tratamiento_datos') === 'on'
+      };
+      try {
+        const data = await fetchJson('/api/auth/registro', { method: 'POST', body });
+        saveSession(data);
+        const roles = getStoredRoles();
+        location.href = roles.includes('PROPIETARIO') ? 'publicar.html' : 'index.html';
+      } catch (e) {
+        showError(error, e.message);
+      }
+    });
+  </script>
+</body>
+
+</html>

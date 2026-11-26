@@ -12,7 +12,6 @@ import java.util.UUID;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.volt.reservaspagos.client.CatalogoClient;
 import com.volt.reservaspagos.client.NotificacionClient;
@@ -37,7 +36,6 @@ import com.volt.reservaspagos.model.patterns.pago.RetencionPago;
 import com.volt.reservaspagos.persistence.IContraCargoDAO;
 import com.volt.reservaspagos.persistence.ICuponDAO;
 import com.volt.reservaspagos.persistence.IReservaDAO;
-import com.volt.reservaspagos.persistence.FranjaReservaDAO;
 import com.volt.reservaspagos.view.dto.CancelarRequest;
 import com.volt.reservaspagos.view.dto.EstadoCuentaResponse;
 import com.volt.reservaspagos.view.dto.FinalizarRequest;
@@ -59,7 +57,6 @@ public class GestorReservas {
 	private final IReservaDAO reservaDAO;
 	private final ICuponDAO cuponDAO;
 	private final IContraCargoDAO contraCargoDAO;
-	private final FranjaReservaDAO franjaDAO;
 	private final ReservaService calculadora;
 	private final CuponService cuponService;
 	private final CatalogoClient catalogoClient;
@@ -68,13 +65,12 @@ public class GestorReservas {
 	private final AuditoriaService auditoriaService;
 
 	public GestorReservas(IReservaDAO reservaDAO, ICuponDAO cuponDAO, IContraCargoDAO contraCargoDAO,
-			FranjaReservaDAO franjaDAO, ReservaService calculadora, CuponService cuponService,
+			ReservaService calculadora, CuponService cuponService,
 			CatalogoClient catalogoClient, PasarelaPagoFactory pasarelaFactory,
 			NotificacionClient notificacionClient, AuditoriaService auditoriaService) {
 		this.reservaDAO = reservaDAO;
 		this.cuponDAO = cuponDAO;
 		this.contraCargoDAO = contraCargoDAO;
-		this.franjaDAO = franjaDAO;
 		this.calculadora = calculadora;
 		this.cuponService = cuponService;
 		this.catalogoClient = catalogoClient;
@@ -83,7 +79,6 @@ public class GestorReservas {
 		this.auditoriaService = auditoriaService;
 	}
 
-	@Transactional
 	public ReservaResponse crear(ReservaRequest request, TokenPrincipal principal, String ip) {
 		if (!principal.verificado()) {
 			throw new AccesoDenegadoException("Tu cuenta debe estar verificada para reservar.");
@@ -105,7 +100,6 @@ public class GestorReservas {
 		BigDecimal deposito = dinero(cotizacion.depositoGarantia());
 		Instant ahora = Instant.now();
 		String id = UUID.randomUUID().toString();
-		franjaDAO.bloquear(id, patineta.id(), request.fechaInicio(), request.fechaFin());
 
 		ReservaDocument reserva = new ReservaDocumentBuilder()
 				.id(id)
@@ -143,7 +137,6 @@ public class GestorReservas {
 		return ReservaResponse.desde(reserva);
 	}
 
-	@Transactional
 	public ReservaResponse aprobar(String id, TokenPrincipal principal, String ip) {
 		ReservaDocument reserva = obtener(id);
 		validarPropietario(reserva, principal);
@@ -160,7 +153,6 @@ public class GestorReservas {
 				.fechaActualizacion(Instant.now())
 				.build();
 		reservaDAO.actualizar(actualizada);
-		franjaDAO.actualizarEstado(id, "CONFIRMADA");
 		notificacionClient.enviar(reserva.idArrendatario(), "RESERVA_CONFIRMADA",
 				"Reserva confirmada", "Tu reserva fue aprobada y el pago quedo retenido.", id);
 		auditoriaService.registrar(principal.userId(), "APROBAR_RESERVA", "RESERVA", id,
@@ -168,7 +160,6 @@ public class GestorReservas {
 		return ReservaResponse.desde(actualizada);
 	}
 
-	@Transactional
 	public ReservaResponse rechazar(String id, String motivo, TokenPrincipal principal, String ip) {
 		ReservaDocument reserva = obtener(id);
 		validarPropietario(reserva, principal);
@@ -183,7 +174,6 @@ public class GestorReservas {
 				.fechaActualizacion(Instant.now())
 				.build();
 		reservaDAO.actualizar(actualizada);
-		franjaDAO.liberar(id);
 		notificacionClient.enviar(reserva.idArrendatario(), "RESERVA_RECHAZADA",
 				"Reserva rechazada", "El propietario rechazo tu solicitud de reserva.", id);
 		auditoriaService.registrar(principal.userId(), "RECHAZAR_RESERVA", "RESERVA", id,
@@ -192,7 +182,6 @@ public class GestorReservas {
 		return ReservaResponse.desde(actualizada);
 	}
 
-	@Transactional
 	public ReservaResponse cancelar(String id, CancelarRequest request, TokenPrincipal principal, String ip) {
 		ReservaDocument reserva = obtener(id);
 		validarParticipante(reserva, principal);
@@ -240,7 +229,6 @@ public class GestorReservas {
 				.fechaActualizacion(ahora)
 				.build();
 		reservaDAO.actualizar(actualizada);
-		franjaDAO.liberar(id);
 		notificacionClient.enviar(reserva.idArrendatario(), "RESERVA_CANCELADA", "Reserva cancelada",
 				"La reserva fue cancelada. Reembolso: " + pago.montoReembolsado(), id);
 		notificacionClient.enviar(reserva.idPropietario(), "RESERVA_CANCELADA", "Reserva cancelada",
@@ -251,7 +239,6 @@ public class GestorReservas {
 		return ReservaResponse.desde(actualizada);
 	}
 
-	@Transactional
 	public ReservaResponse reprogramar(String id, ReprogramarRequest request, TokenPrincipal principal, String ip) {
 		ReservaDocument reserva = obtener(id);
 		if (!principal.userId().equals(reserva.idArrendatario()) && !principal.esAdministrador()) {
@@ -274,7 +261,6 @@ public class GestorReservas {
 				dinero(total.add(reserva.deposito().montoRetenido())), comision,
 				reserva.pago().montoReembolsado(), reserva.pago().estado(), reserva.pago().fechaPago(),
 				reserva.pago().comprobante());
-		franjaDAO.reprogramar(id, reserva.idPatineta(), request.fechaInicio(), request.fechaFin());
 		ReservaDocument actualizada = ReservaDocumentBuilder.de(reserva)
 				.fechaInicio(request.fechaInicio())
 				.fechaFin(request.fechaFin())
@@ -293,7 +279,6 @@ public class GestorReservas {
 		return ReservaResponse.desde(actualizada);
 	}
 
-	@Transactional
 	public ReservaResponse extender(String id, Instant nuevaFin, TokenPrincipal principal, String ip) {
 		ReservaDocument reserva = obtener(id);
 		if (!principal.userId().equals(reserva.idArrendatario()) && !principal.esAdministrador()) {
@@ -315,7 +300,6 @@ public class GestorReservas {
 				dinero(reserva.pago().montoTotal().add(diferencia.max(CERO))), comision,
 				reserva.pago().montoReembolsado(), reserva.pago().estado(), reserva.pago().fechaPago(),
 				reserva.pago().comprobante());
-		franjaDAO.reprogramar(id, reserva.idPatineta(), reserva.fechaInicio(), nuevaFin);
 		ReservaDocument actualizada = ReservaDocumentBuilder.de(reserva)
 				.fechaFin(nuevaFin)
 				.subtotalAlquiler(dinero(cotizacion.valorAlquiler()))
@@ -349,7 +333,6 @@ public class GestorReservas {
 				.fechaActualizacion(ahora)
 				.build();
 		reservaDAO.actualizar(actualizada);
-		franjaDAO.actualizarEstado(id, "EN_CURSO");
 		notificacionClient.enviar(reserva.idArrendatario(), "RESERVA_INICIADA",
 				"Reserva iniciada", "El propietario registro el check-in de la patineta.", id);
 		auditoriaService.registrar(actorId, "INICIAR_RESERVA", "RESERVA", id,
@@ -376,7 +359,6 @@ public class GestorReservas {
 				.fechaActualizacion(Instant.now())
 				.build();
 		reservaDAO.actualizar(actualizada);
-		franjaDAO.liberar(id);
 		notificacionClient.enviar(reserva.idArrendatario(), "RESERVA_FINALIZADA",
 				"Reserva finalizada", "El check-out fue registrado. El deposito se libera en 48 horas.", id);
 		auditoriaService.registrar(actorId, "FINALIZAR_RESERVA", "RESERVA", id,
@@ -473,7 +455,6 @@ public class GestorReservas {
 					.fechaActualizacion(Instant.now())
 					.build();
 			reservaDAO.actualizar(actualizada);
-			franjaDAO.liberar(reserva.id());
 			notificacionClient.enviar(reserva.idArrendatario(), "RESERVA_VENCIDA",
 					"Reserva vencida", "No se registro el check-in y la reserva fue marcada como vencida.", reserva.id());
 		}
@@ -509,8 +490,9 @@ public class GestorReservas {
 	}
 
 	public List<FranjaResponse> calendario(String patinetaId, Instant desde, Instant hasta) {
-		return franjaDAO.franjas(patinetaId, desde, hasta).stream()
-				.map(franja -> new FranjaResponse(franja.inicio(), franja.fin(), franja.estado()))
+		return reservaDAO.listarAdmin(null, desde, hasta, 0, 10000).stream()
+				.filter(reserva -> patinetaId.equals(reserva.idPatineta()))
+				.map(reserva -> new FranjaResponse(reserva.fechaInicio(), reserva.fechaFin(), reserva.estado().name()))
 				.toList();
 	}
 
@@ -518,7 +500,15 @@ public class GestorReservas {
 		if (inicio == null || fin == null || !fin.isAfter(inicio)) {
 			throw new IllegalArgumentException("El rango de fechas es invalido.");
 		}
-		return franjaDAO.patinetasOcupadas(inicio, fin);
+		return reservaDAO.listarAdmin(null, null, null, 0, 10000).stream()
+				.filter(reserva -> EstadoReserva.SOLICITADA == reserva.estado()
+						|| EstadoReserva.CONFIRMADA == reserva.estado()
+						|| EstadoReserva.EN_CURSO == reserva.estado())
+				.filter(reserva -> !reserva.fechaInicio().isAfter(fin)
+						&& !reserva.fechaFin().isBefore(inicio))
+				.map(ReservaDocument::idPatineta)
+				.distinct()
+				.toList();
 	}
 
 	public EstadoCuentaResponse estadoCuenta(String propietarioId) {

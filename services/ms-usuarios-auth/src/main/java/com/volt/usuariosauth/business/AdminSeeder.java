@@ -32,8 +32,8 @@ public class AdminSeeder implements ApplicationRunner {
 			IUsuarioDAO usuarioDAO,
 			PasswordEncoder passwordEncoder,
 			@Value("${volt.seed.admin:true}") boolean habilitado,
-			@Value("${volt.seed.admin.email:admin@volt.com}") String correo,
-			@Value("${volt.seed.admin.password:Admin123456!}") String password) {
+			@Value("${volt.seed.admin.email:admin@volt.local}") String correo,
+			@Value("${volt.seed.admin.password:Volt-Admin-Local-2026-8d4e2f}") String password) {
 		this.usuarioDAO = usuarioDAO;
 		this.passwordEncoder = passwordEncoder;
 		this.habilitado = habilitado;

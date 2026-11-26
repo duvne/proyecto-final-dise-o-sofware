@@ -240,8 +240,10 @@ public class UsuarioService {
 	}
 
 	private Usuario obtenerUsuario(String userId) {
+		// Primero intentamos buscar por ID (UUID MongoDB)
 		return usuarioDAO.buscarPorId(userId)
-				.orElseThrow(() -> new NoEncontradoException("No existe el usuario " + userId + "."));
+				.orElseGet(() -> usuarioDAO.buscarPorCorreo(userId.toLowerCase())
+						.orElseThrow(() -> new NoEncontradoException("No existe el usuario " + userId + ".")));
 	}
 
 	private AuthResponse authResponse(Usuario usuario) {

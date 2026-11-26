@@ -3,6 +3,7 @@ package com.volt.operaciones.presentation;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +33,7 @@ public class OponarController {
 	}
 
 	@GetMapping
+	@PreAuthorize("hasRole('ADMINISTRADOR')")
 	public List<DisputaResponse> listarTodas() {
 		return oponarService.listar().stream().map(DisputaResponse::desde).toList();
 	}

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Publicar patineta | VOLT</title>
+  <link rel="stylesheet" href="css/styles.css?v=6">
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="wrap nav"><a class="brand" href="index.html">ϟ <b>VOLT</b></a>
+      <nav class="navlinks"><a href="index.html">Explorar</a><a href="publicar.html">Publicar patineta</a></nav>
+      <div class="navright"><a href="index.html">Volver</a></div>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="pagehead">
+      <div class="eyebrow">Modo propietario</div>
+      <h1>Publica tu Patineta</h1>
+      <p class="sub">Completa los datos paso a paso y guarda un borrador.</p>
+    </section>
+    <section class="card boxpad" style="max-width:720px">
+      <form id="publicarForm" novalidate>
+        <div class="progress" id="publicarProgress" aria-label="Progreso del formulario">
+          <div class="current" data-step-label="1" aria-current="step">1. Ficha técnica</div>
+          <div data-step-label="2">2. Fotos y documentos</div>
+          <div data-step-label="3">3. Tarifas</div>
+          <div data-step-label="4">4. Disponibilidad</div>
+        </div>
+
+        <section class="form-step active" data-step="1" aria-labelledby="step1Title">
+          <h2 id="step1Title">Ficha técnica</h2>
+          <p class="muted">Datos básicos para identificar la patineta.</p>
+          <div class="formgrid">
+            <div class="field full"><label for="categoria">Categoría</label><input id="categoria" name="categoria"
+                value="Urbana" required></div>
+            <div class="field full"><label for="marca">Marca</label><input id="marca" name="marca"
+                placeholder="Ej. Xiaomi" required></div>
+            <div class="field full"><label for="modelo">Modelo</label><input id="modelo" name="modelo"
+                placeholder="Ej. Mi Electric Scooter 3" required></div>
+            <div class="field full"><label for="autonomiaKm">Autonomía (km)</label><input id="autonomiaKm"
+                name="autonomiaKm" type="number" min="1" step="1" placeholder="Ej. 30" required></div>
+            <div class="field full"><label for="velocidadMaxima">Velocidad máxima (km/h)</label><input
+                id="velocidadMaxima" name="velocidadMaxima" type="number" min="1" step="1" placeholder="Ej. 25"
+                required></div>
+            <div class="field full"><label for="estadoFisico">Estado físico</label><input id="estadoFisico"
+                name="estadoFisico" placeholder="Ej. Excelente" required></div>
+          </div>
+        </section>
+
+        <section class="form-step" data-step="2" aria-labelledby="step2Title">
+          <h2 id="step2Title">Fotos y documentos</h2>
+          <p class="muted">Opcional. Pega una URL por línea; puedes dejarlo vacío y agregarlos después.</p>
+          <div class="formgrid">
+            <div class="field full"><label for="fotos">Fotos (URLs)</label><textarea id="fotos" name="fotos" rows="3"
+                placeholder="https://ejemplo.com/foto1.jpg"></textarea></div>
+            <div class="field full"><label for="documentos">Documentos (URLs)</label><textarea id="documentos"
+                name="documentos" rows="3" placeholder="https://ejemplo.com/documento.pdf"></textarea></div>
+          </div>
+        </section>
+
+        <section class="form-step" data-step="3" aria-labelledby="step3Title">
+          <h2 id="step3Title">Tarifas</h2>
+          <p class="muted">La tarifa diaria se aplica automáticamente a partir de 8 horas continuas (RN-03).</p>
+          <div class="formgrid">
+            <div class="field full"><label for="valorHora">Tarifa por hora (COP)</label><input id="valorHora"
+                name="valorHora" type="number" min="0" step="1" placeholder="Ej. 8000" required></div>
+            <div class="field full"><label for="valorDia">Tarifa por día (COP)</label><input id="valorDia"
+                name="valorDia" type="number" min="0" step="1" placeholder="Ej. 45000" required></div>
+            <div class="field full"><label for="valorDeposito">Depósito (COP)</label><input id="valorDeposito"
+                name="valorDeposito" type="number" min="0" step="1" placeholder="Ej. 100000" required></div>
+          </div>
+        </section>
+
+        <section class="form-step" data-step="4" aria-labelledby="step4Title">
+          <h2 id="step4Title">Disponibilidad</h2>
+          <p class="muted">Indica el punto donde el arrendatario recogerá la patineta.</p>
+          <div class="formgrid">
+            <div class="field full"><label for="direccion">Dirección</label><input id="direccion" name="direccion"
+                placeholder="Ej. Cra 45 # 80-12" required></div>
+            <div class="field full"><label for="latitud">Latitud</label><input id="latitud" name="latitud"
+                type="number" min="-90" max="90" step="0.000001" placeholder="Ej. 10.968540" required></div>
+            <div class="field full"><label for="longitud">Longitud</label><input id="longitud" name="longitud"
+                type="number" min="-180" max="180" step="0.000001" placeholder="Ej. -74.781320" required></div>
+            <div class="field full"><label for="ciudad">Zona / ciudad</label><input id="ciudad" name="ciudad"
+                placeholder="Ej. Barranquilla" required></div>
+          </div>
+        </section>
+
+        <div id="stepError" class="notice" role="alert" hidden></div>
+        <div class="step-actions">
+          <button type="button" class="btn light" id="prevStep" hidden>Anterior</button>
+          <span class="spacer"></span>
+          <button type="button" class="btn" id="nextStep">Siguiente</button>
+          <button type="submit" class="btn" id="submitStep" hidden>Guardar borrador</button>
+          <a class="btn dark" href="propietario.html">Mis patinetas</a>
+        </div>
+      </form>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="wrap">VOLT · Alquiler entre particulares · Barranquilla, Colombia</div>
+  </footer>
+  <script src="js/app.js?v=5"></script>
+  <script src="js/publicar.js?v=1"></script>
+</body>
+
+</html>

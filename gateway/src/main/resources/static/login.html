@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Iniciar sesión | VOLT</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap nav"><a class="brand" href="index.html">ϟ <b>VOLT</b></a></div>
+  </header>
+  <main class="wrap">
+    <section class="card boxpad" style="max-width:440px">
+      <h2>Iniciar sesión</h2>
+      <div id="loginError" class="notice"></div>
+      <form id="loginForm">
+        <div class="field"><label>Correo</label><input id="loginEmail" type="email" autocomplete="username" placeholder="admin@volt.local" required></div>
+        <div class="field"><label>Contraseña</label><input id="loginPassword" type="password" autocomplete="current-password" required></div>
+        <div class="row-actions"><button class="btn" type="submit">Iniciar sesión</button> <a class="btn light" href="index.html">Cancelar</a></div>
+      </form>
+      <p class="muted">¿No tienes cuenta? <a href="registro.html"><strong>Crear cuenta</strong></a></p>
+      <p class="muted">Usuario por defecto: <strong>admin@volt.local</strong> / <strong>Volt-Admin-Local-2026-8d4e2f</strong></p>
+    </section>
+  </main>
+  <footer class="footer"><div class="wrap">VOLT · Alquiler entre particulares</div></footer>
+  <script src="js/app.js?v=5"></script>
+  <script src="js/login.js?v=5"></script>
+</body>
+</html>

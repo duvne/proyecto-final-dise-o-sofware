@@ -1,0 +1,381 @@
+ESTRUCTURA DEL PROYECTO - VOLT
+Generado: 26/11/2026
+Nota: no se incluyen carpetas generadas como target/, logs/, .git/ ni .idea/.
+
+proyecto-final-diseño-sofware/
+|-- .github/
+|   +-- modernize/
+|       +-- java-upgrade/
+|           |-- hooks/
+|           |   +-- scripts/
+|           |       |-- recordToolUse.ps1
+|           |       +-- recordToolUse.sh
+|           +-- .gitignore
+|-- .mvn/
+|   +-- wrapper/
+|       +-- maven-wrapper.properties
+|-- gateway/
+|   |-- src/
+|   |   |-- main/
+|   |   |   |-- java/
+|   |   |   |   +-- com/volt/gateway/
+|   |   |   |       +-- GatewayApplication.java
+|   |   |   +-- resources/
+|   |   |       |-- static/
+|   |   |       |   |-- css/
+|   |   |       |   |   +-- styles.css
+|   |   |       |   |-- js/
+|   |   |       |   |   |-- app.js
+|   |   |       |   |   +-- login.js
+|   |   |       |   |-- admin.html
+|   |   |       |   |-- detalle.html
+|   |   |       |   |-- disponibilidad.html
+|   |   |       |   |-- index.html
+|   |   |       |   |-- login.html
+|   |   |       |   |-- pago.html
+|   |   |       |   |-- propietario.html
+|   |   |       |   |-- publicar.html
+|   |   |       |   |-- README.md
+|   |   |       |   +-- registro.html
+|   |   |       |-- application.properties
+|   |   |       +-- application.yml
+|   |   +-- test/
+|   |       +-- java/com/volt/gateway/
+|   |           +-- GatewayRoutesTest.java
+|   +-- pom.xml
+|-- schemas/
+|   +-- mongodb/
+|       |-- cupones.schema.json
+|       |-- patinetas.schema.json
+|       |-- reservas.schema.json
+|       +-- usuarios.schema.json
+|-- scripts/
+|   |-- mongodb/
+|   |   |-- apply-schemas.js
+|   |   |-- create-collections.js
+|   |   +-- volt-collection-schemas.json
+|   +-- start-platform.ps1
+|-- services/
+|   |-- ms-catalogo-flota/
+|   |   |-- src/
+|   |   |   |-- main/
+|   |   |   |   |-- java/com/volt/catalogoflota/
+|   |   |   |   |   |-- business/
+|   |   |   |   |   |   |-- AccesoDenegadoException.java
+|   |   |   |   |   |   |-- AlertaService.java
+|   |   |   |   |   |   |-- CalificacionService.java
+|   |   |   |   |   |   |-- CatalogoSeeder.java
+|   |   |   |   |   |   |-- CategoriaService.java
+|   |   |   |   |   |   |-- FavoritoService.java
+|   |   |   |   |   |   |-- PatinetaNoEncontradaException.java
+|   |   |   |   |   |   |-- PatinetaService.java
+|   |   |   |   |   |   |-- ServicioNoDisponibleException.java
+|   |   |   |   |   |   +-- ZonaService.java
+|   |   |   |   |   |-- client/
+|   |   |   |   |   |   |-- OcupadasResponse.java
+|   |   |   |   |   |   |-- ReservaInfo.java
+|   |   |   |   |   |   |-- ReservasClient.java
+|   |   |   |   |   |   +-- UsuariosClient.java
+|   |   |   |   |   |-- document/
+|   |   |   |   |   |   |-- AlertaDisponibilidadDocument.java
+|   |   |   |   |   |   |-- CalificacionDocument.java
+|   |   |   |   |   |   |-- CategoriaDocument.java
+|   |   |   |   |   |   |-- FavoritoDocument.java
+|   |   |   |   |   |   |-- MantenimientoDocument.java
+|   |   |   |   |   |   |-- PatinetaDocument.java
+|   |   |   |   |   |   |-- PuntoEntregaDocument.java
+|   |   |   |   |   |   |-- TarifaDocument.java
+|   |   |   |   |   |   |-- ZonaCatalogoDocument.java
+|   |   |   |   |   |   +-- ZonaDocument.java
+|   |   |   |   |   |-- persistence/
+|   |   |   |   |   |   |-- AlertaMongoDAO.java
+|   |   |   |   |   |   |-- CalificacionMongoDAO.java
+|   |   |   |   |   |   |-- CategoriaMongoDAO.java
+|   |   |   |   |   |   |-- FavoritoMongoDAO.java
+|   |   |   |   |   |   |-- FiltroPatinetas.java
+|   |   |   |   |   |   |-- IAlertaDAO.java
+|   |   |   |   |   |   |-- ICalificacionDAO.java
+|   |   |   |   |   |   |-- ICategoriaDAO.java
+|   |   |   |   |   |   |-- IFavoritoDAO.java
+|   |   |   |   |   |   |-- IMantenimientoDAO.java
+|   |   |   |   |   |   |-- IPatinetaDAO.java
+|   |   |   |   |   |   |-- IZonaDAO.java
+|   |   |   |   |   |   |-- MantenimientoMongoDAO.java
+|   |   |   |   |   |   |-- PatinetaMongoDAOImpl.java
+|   |   |   |   |   |   |-- PatinetaPage.java
+|   |   |   |   |   |   +-- ZonaMongoDAO.java
+|   |   |   |   |   |-- presentation/
+|   |   |   |   |   |   |-- AdminCatalogoController.java
+|   |   |   |   |   |   |-- AlertaController.java
+|   |   |   |   |   |   |-- CalificacionController.java
+|   |   |   |   |   |   |-- CatalogoExceptionHandler.java
+|   |   |   |   |   |   |-- CategoriaController.java
+|   |   |   |   |   |   |-- FavoritoController.java
+|   |   |   |   |   |   |-- PatinetaRestController.java
+|   |   |   |   |   |   |-- PropietarioPatinetaController.java
+|   |   |   |   |   |   +-- ZonaController.java
+|   |   |   |   |   |-- security/
+|   |   |   |   |   |   +-- SecurityConfig.java
+|   |   |   |   |   |-- view/dto/
+|   |   |   |   |   |   |-- AlertaRequest.java
+|   |   |   |   |   |   |-- AlertaResponse.java
+|   |   |   |   |   |   |-- CalificacionRequest.java
+|   |   |   |   |   |   |-- CalificacionResponse.java
+|   |   |   |   |   |   |-- CategoriaRequest.java
+|   |   |   |   |   |   |-- CategoriaResponse.java
+|   |   |   |   |   |   |-- FavoritoResponse.java
+|   |   |   |   |   |   |-- MantenimientoRequest.java
+|   |   |   |   |   |   |-- MantenimientoResponse.java
+|   |   |   |   |   |   |-- ModeracionCalificacionRequest.java
+|   |   |   |   |   |   |-- ModeracionPatinetaRequest.java
+|   |   |   |   |   |   |-- PatinetaPageResponseDTO.java
+|   |   |   |   |   |   |-- PatinetaRequestDTO.java
+|   |   |   |   |   |   |-- PatinetaResponseDTO.java
+|   |   |   |   |   |   |-- PuntoEntregaDTO.java
+|   |   |   |   |   |   |-- ReplicaCalificacionRequest.java
+|   |   |   |   |   |   |-- ReporteCalificacionRequest.java
+|   |   |   |   |   |   |-- TarifaDTO.java
+|   |   |   |   |   |   |-- UrlsRequest.java
+|   |   |   |   |   |   |-- ZonaDTO.java
+|   |   |   |   |   |   |-- ZonaRequest.java
+|   |   |   |   |   |   +-- ZonaResponse.java
+|   |   |   |   |   +-- CatalogoFlotaApplication.java
+|   |   |   |   +-- resources/
+|   |   |   |       +-- application.properties
+|   |   |   +-- test/java/com/volt/catalogoflota/
+|   |   |       |-- business/PatinetaServiceTest.java
+|   |   |       |-- persistence/FiltroPatinetasTest.java
+|   |   |       |-- persistence/PatinetaMongoDAOImplTest.java
+|   |   |       +-- CatalogoFlotaApplicationTest.java
+|   |   +-- pom.xml
+|   |-- ms-comunicacion/
+|   |   |-- src/main/
+|   |   |   |-- java/com/volt/comunicacion/
+|   |   |   |   |-- presentation/NotificationsController.java
+|   |   |   |   |-- security/
+|   |   |   |   |-- CampanaDTO.java
+|   |   |   |   |-- CampaniasService.java
+|   |   |   |   |-- ComunicacionApplication.java
+|   |   |   |   |-- MailClient.java
+|   |   |   |   |-- NotificationDTO.java
+|   |   |   |   +-- NotificationsService.java
+|   |   |   +-- resources/application.properties
+|   |   +-- pom.xml
+|   |-- ms-operaciones-incidencias/
+|   |   |-- src/main/
+|   |   |   |-- java/com/volt/operaciones/
+|   |   |   |   |-- business/
+|   |   |   |   |   |-- AutorizarGastosService.java
+|   |   |   |   |   |-- GeneradorDeCertificadosService.java
+|   |   |   |   |   |-- OponarService.java
+|   |   |   |   |   |-- OpsService.java
+|   |   |   |   |   +-- SmartActorService.java
+|   |   |   |   |-- domain/
+|   |   |   |   |   |-- ActaDocument.java
+|   |   |   |   |   |-- DisputaDocument.java
+|   |   |   |   |   +-- IncidenciaDocument.java
+|   |   |   |   |-- persistence/
+|   |   |   |   |   |-- ActaMongoDAO.java
+|   |   |   |   |   |-- DisputaMongoDAO.java
+|   |   |   |   |   |-- IActaDAO.java
+|   |   |   |   |   |-- IDisputaDAO.java
+|   |   |   |   |   |-- IIncidenciaDAO.java
+|   |   |   |   |   +-- IncidenciaMongoDAO.java
+|   |   |   |   |-- presentation/
+|   |   |   |   |   |-- dto/
+|   |   |   |   |   |   |-- ActaResponse.java
+|   |   |   |   |   |   |-- CrearActaRequest.java
+|   |   |   |   |   |   |-- DisputaResponse.java
+|   |   |   |   |   |   |-- IncidenciaResponse.java
+|   |   |   |   |   |   |-- OponerArrendatarioRequest.java
+|   |   |   |   |   |   |-- OponerspectralRequest.java
+|   |   |   |   |   |   +-- ResolverDisputaRequest.java
+|   |   |   |   |   |-- ActaController.java
+|   |   |   |   |   |-- IncidenciaController.java
+|   |   |   |   |   |-- OponarController.java
+|   |   |   |   |   +-- SmartActorController.java
+|   |   |   |   |-- security/
+|   |   |   |   |   +-- SecurityConfig.java
+|   |   |   |   +-- OperacionesIncidenciasApplication.java
+|   |   |   +-- resources/application.properties
+|   |   +-- pom.xml
+|   |-- ms-reservas-pagos/
+|   |   |-- src/
+|   |   |   |-- main/
+|   |   |   |   |-- java/com/volt/reservaspagos/
+|   |   |   |   |   |-- client/
+|   |   |   |   |   |   |-- CatalogoClient.java
+|   |   |   |   |   |   |-- NotificacionClient.java
+|   |   |   |   |   |   +-- PatinetaInfo.java
+|   |   |   |   |   |-- model/
+|   |   |   |   |   |   |-- domain/
+|   |   |   |   |   |   |   |-- AccesoDenegadoException.java
+|   |   |   |   |   |   |   |-- ContraCargoDocument.java
+|   |   |   |   |   |   |   |-- Cotizacion.java
+|   |   |   |   |   |   |   |-- CuponDocument.java
+|   |   |   |   |   |   |   |-- CuponInvalidoException.java
+|   |   |   |   |   |   |   |-- DepositoInfo.java
+|   |   |   |   |   |   |   |-- EstadoReserva.java
+|   |   |   |   |   |   |   |-- EstadoReservaInvalidoException.java
+|   |   |   |   |   |   |   |-- FranjaDisponible.java
+|   |   |   |   |   |   |   |-- FranjaOcupadaException.java
+|   |   |   |   |   |   |   |-- LiquidacionInfo.java
+|   |   |   |   |   |   |   |-- PagoInfo.java
+|   |   |   |   |   |   |   |-- ReservaDocument.java
+|   |   |   |   |   |   |   |-- ReservaDocumentBuilder.java
+|   |   |   |   |   |   |   |-- ReservaNoEncontradaException.java
+|   |   |   |   |   |   |   |-- ResultadoCancelacion.java
+|   |   |   |   |   |   |   +-- ServicioNoDisponibleException.java
+|   |   |   |   |   |   |-- patterns/
+|   |   |   |   |   |   |   |-- pago/
+|   |   |   |   |   |   |   |   |-- PasarelaPago.java
+|   |   |   |   |   |   |   |   |-- PasarelaPagoFactory.java
+|   |   |   |   |   |   |   |   |-- PasarelaSimulada.java
+|   |   |   |   |   |   |   |   |-- RetencionPago.java
+|   |   |   |   |   |   |   |   |-- StripeAdapter.java
+|   |   |   |   |   |   |   |   +-- WompiAdapter.java
+|   |   |   |   |   |   |   +-- ConfiguracionComisionSingleton.java
+|   |   |   |   |   |   +-- service/
+|   |   |   |   |   |       |-- CuponService.java
+|   |   |   |   |   |       |-- GestorReservas.java
+|   |   |   |   |   |       +-- ReservaService.java
+|   |   |   |   |   |-- persistence/
+|   |   |   |   |   |   |-- ContraCargoMongoDAO.java
+|   |   |   |   |   |   |-- CuponMongoDAO.java
+|   |   |   |   |   |   |-- IContraCargoDAO.java
+|   |   |   |   |   |   |-- ICuponDAO.java
+|   |   |   |   |   |   |-- IReservaDAO.java
+|   |   |   |   |   |   +-- ReservaMongoDAO.java
+|   |   |   |   |   |-- presentation/
+|   |   |   |   |   |   |-- CuponController.java
+|   |   |   |   |   |   |-- DisponibilidadController.java
+|   |   |   |   |   |   |-- InternoReservaController.java
+|   |   |   |   |   |   |-- PagoController.java
+|   |   |   |   |   |   |-- ReservaController.java
+|   |   |   |   |   |   +-- ReservaExceptionHandler.java
+|   |   |   |   |   |-- security/
+|   |   |   |   |   |   +-- SecurityConfig.java
+|   |   |   |   |   |-- view/dto/
+|   |   |   |   |   |   |-- CancelarRequest.java
+|   |   |   |   |   |   |-- ContraCargoRequest.java
+|   |   |   |   |   |   |-- ContraCargoResponse.java
+|   |   |   |   |   |   |-- CuponRequest.java
+|   |   |   |   |   |   |-- CuponResponse.java
+|   |   |   |   |   |   |-- DisputaRequest.java
+|   |   |   |   |   |   |-- EstadoCuentaResponse.java
+|   |   |   |   |   |   |-- ExtensionRequest.java
+|   |   |   |   |   |   |-- FinalizarRequest.java
+|   |   |   |   |   |   |-- FranjaResponse.java
+|   |   |   |   |   |   |-- ReportePagoResponse.java
+|   |   |   |   |   |   |-- ReprogramarRequest.java
+|   |   |   |   |   |   |-- ReservaInternaResponse.java
+|   |   |   |   |   |   |-- ReservaRequest.java
+|   |   |   |   |   |   |-- ReservaResponse.java
+|   |   |   |   |   |   |-- ResolucionDisputaRequest.java
+|   |   |   |   |   |   |-- ValidarCuponRequest.java
+|   |   |   |   |   |   +-- ValidarCuponResponse.java
+|   |   |   |   |   +-- ReservasPagosApplication.java
+|   |   |   |   +-- resources/
+|   |   |   |       |-- db/schema.sql
+|   |   |   |       +-- application.properties
+|   |   |   +-- test/java/com/volt/reservaspagos/model/service/
+|   |   |       +-- ReservaServiceTest.java
+|   |   +-- pom.xml
+|   +-- ms-usuarios-auth/
+|       |-- src/
+|       |   |-- main/
+|       |   |   |-- java/com/volt/usuariosauth/
+|       |   |   |   |-- business/
+|       |   |   |   |   |-- AdminSeeder.java
+|       |   |   |   |   |-- RecuperacionService.java
+|       |   |   |   |   +-- UsuarioService.java
+|       |   |   |   |-- domain/
+|       |   |   |   |   |-- AccesoDenegadoException.java
+|       |   |   |   |   |-- Consentimiento.java
+|       |   |   |   |   |-- CredencialesInvalidasException.java
+|       |   |   |   |   |-- CuentaBloqueadaException.java
+|       |   |   |   |   |-- EstadoCuenta.java
+|       |   |   |   |   |-- NoEncontradoException.java
+|       |   |   |   |   |-- PerfilArrendatario.java
+|       |   |   |   |   |-- PerfilPropietario.java
+|       |   |   |   |   |-- RecuperacionContrasena.java
+|       |   |   |   |   |-- RecuperacionInvalidaException.java
+|       |   |   |   |   |-- RegistroAuditoria.java
+|       |   |   |   |   |-- Usuario.java
+|       |   |   |   |   +-- UsuarioYaExisteException.java
+|       |   |   |   |-- persistence/
+|       |   |   |   |   |-- AuditoriaMongoDAO.java
+|       |   |   |   |   |-- IAuditoriaDAO.java
+|       |   |   |   |   |-- IRecuperacionDAO.java
+|       |   |   |   |   |-- IUsuarioDAO.java
+|       |   |   |   |   |-- RecuperacionMongoDAO.java
+|       |   |   |   |   +-- UsuarioMongoDAO.java
+|       |   |   |   |-- presentation/
+|       |   |   |   |   |-- AdminUsuarioController.java
+|       |   |   |   |   |-- AuthController.java
+|       |   |   |   |   |-- AuthExceptionHandler.java
+|       |   |   |   |   +-- InternalUsuarioController.java
+|       |   |   |   |-- security/
+|       |   |   |   |   +-- SecurityConfig.java
+|       |   |   |   |-- view/
+|       |   |   |   |   |-- ActualizarPerfilRequest.java
+|       |   |   |   |   |-- AuditoriaResponse.java
+|       |   |   |   |   |-- AuthResponse.java
+|       |   |   |   |   |-- ConsentimientoRequest.java
+|       |   |   |   |   |-- LoginRequest.java
+|       |   |   |   |   |-- PerfilPropietarioRequest.java
+|       |   |   |   |   |-- RecuperacionConfirmRequest.java
+|       |   |   |   |   |-- RecuperacionRequest.java
+|       |   |   |   |   |-- RegistroUsuarioRequest.java
+|       |   |   |   |   |-- ReputacionRequest.java
+|       |   |   |   |   |-- SuspensionRequest.java
+|       |   |   |   |   |-- UsuarioInternoResponse.java
+|       |   |   |   |   |-- UsuarioResponse.java
+|       |   |   |   |   +-- VerificacionRequest.java
+|       |   |   |   +-- UsuariosAuthApplication.java
+|       |   |   +-- resources/application.properties
+|       +-- pom.xml
+|-- shared/
+|   |-- src/main/java/com/volt/shared/
+|   |   |-- api/
+|   |   |   |-- ApiError.java
+|   |   |   +-- PageResponse.java
+|   |   |-- audit/
+|   |   |   +-- AuditoriaService.java
+|   |   +-- security/
+|   |       |-- InternalKey.java
+|   |       |-- InvalidTokenException.java
+|   |       |-- IssuedToken.java
+|   |       |-- JwtAuthenticationFilter.java
+|   |       |-- JwtTokenService.java
+|   |       |-- Roles.java
+|   |       |-- SecurityErrors.java
+|   |       +-- TokenPrincipal.java
+|   +-- pom.xml
+|-- src/
+|   |-- main/
+|   |   |-- java/com/patinetas/proyecto_final_diseno_sofware/
+|   |   +-- resources/
+|   |       |-- static/
+|   |       |-- templates/
+|   |       +-- application.properties
+|   +-- test/java/com/patinetas/proyecto_final_diseno_sofware/
+|-- .env.example
+|-- .gitattributes
+|-- .gitignore
+|-- HELP.md
+|-- mvnw
+|-- mvnw.cmd
+|-- pom.xml
+|-- README.md
+|-- squema.txt
++-- VOLT PROYECTO (2).pdf
+
+RESUMEN
+- gateway/: punto de entrada HTTP y pantallas web (static/).
+- services/: los 5 microservicios Maven.
+- shared/: seguridad JWT, auditoria, errores y paginacion comunes.
+- schemas/mongodb/: esquemas de las colecciones.
+- scripts/: arranque de la plataforma y creacion de colecciones.
+- src/: estructura residual del proyecto Spring inicial; no forma parte de los modulos activos.
+- target/ y logs/: excluidos por ser generados por Maven y la ejecucion.

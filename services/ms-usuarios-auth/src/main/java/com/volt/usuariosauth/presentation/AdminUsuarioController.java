@@ -72,6 +72,14 @@ public class AdminUsuarioController {
 		return usuarioService.reactivar(principal.userId(), id, ip(httpRequest));
 	}
 
+	@DeleteMapping("/usuarios/{id}")
+	public void eliminar(
+			@AuthenticationPrincipal TokenPrincipal principal,
+			@PathVariable String id,
+			HttpServletRequest httpRequest) {
+		usuarioService.eliminarCuenta(id, ip(httpRequest));
+	}
+
 	@GetMapping("/auditoria")
 	public PageResponse<AuditoriaResponse> auditoria(
 			@RequestParam(defaultValue = "0") int pagina,

@@ -19,10 +19,13 @@ public class CatalogoExceptionHandler {
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ApiError> validacion(MethodArgumentNotValidException exception) {
 		Map<String, String> campos = new LinkedHashMap<>();
-		exception.getBindingResult().getFieldErrors()
-				.forEach(error -> campos.put(error.getField(), error.getDefaultMessage()));
+		exception.getBindingResult().getFieldErrors().forEach(error ->
+				campos.put(error.getField(), error.getDefaultMessage()));
+		String detalle = campos.isEmpty() ? exception.getMessage() : campos.entrySet().stream()
+				.map(e -> e.getKey() + ": " + e.getValue())
+				.collect(java.util.stream.Collectors.joining("; "));
 		return ResponseEntity.badRequest()
-				.body(ApiError.de("Solicitud invalida", "Revisa los campos enviados.", campos));
+				.body(ApiError.de("Solicitud invalida", detalle, campos));
 	}
 
 	@ExceptionHandler(PatinetaNoEncontradaException.class)

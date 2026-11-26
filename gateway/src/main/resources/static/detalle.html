@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Detalle de patineta | VOLT</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="wrap nav"><a class="brand" href="index.html">ϟ <b>VOLT</b></a>
+      <nav class="navlinks"><a href="index.html">Explorar</a><a href="publicar.html">Publicar patineta</a></nav>
+      <div class="navright"><a href="index.html">Volver</a></div>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="pagehead">
+      <div class="muted">Explorar / Patinetas eléctricas / Volt City Pro</div>
+    </section>
+    <section class="detail-grid">
+      <div>
+        <div class="gallery-main">🛴</div>
+        <div class="thumbs">
+          <div class="thumb">🛴</div>
+          <div class="thumb">⚙️</div>
+          <div class="thumb">🔴</div>
+        </div>
+        <h2>Volt City Pro - Modelo 2025</h2>
+        <p class="sub">Patineta eléctrica urbana de alto rendimiento.</p>
+        <div class="stats">
+          <div class="stat"><strong id="autonomia">50 km</strong><span>Autonomía</span></div>
+          <div class="stat"><strong id="velocidad">25 km/h</strong><span>Velocidad máxima</span></div>
+          <div class="stat"><strong>Excelente</strong><span>Estado físico</span></div>
+        </div>
+      </div>
+      <aside class="card summary">
+        <h2>Resumen de reserva</h2>
+        <div class="sumrow"><span>Duración</span><strong id="duracion">4 horas</strong></div>
+        <div class="sumrow"><span>Tarifa de alquiler</span><strong id="tarifa">$72.000 COP</strong></div>
+        <div class="sumrow"><span>Depósito de garantía</span><strong id="deposito">$50.000 COP</strong></div>
+        <div class="sumrow"><span>Comisión de plataforma (15%)</span><strong id="comision">$18.000 COP</strong></div>
+        <div class="sumrow"><strong>Total estimado</strong><span id="total" class="total">$122.000 COP</span></div><a
+          class="btn" style="width:100%" href="pago.html">Reservar ahora</a>
+      </aside>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="wrap">VOLT · Alquiler entre particulares</div>
+  </footer>
+  <script>
+    (async function () {
+      const params = new URLSearchParams(location.search);
+      const id = params.get('id');
+      if (id) {
+        try {
+          const resp = await fetch('/api/catalogo/patinetas/' + encodeURIComponent(id));
+          if (resp.ok) {
+            const p = await resp.json();
+            document.querySelector('h2').textContent = p.marca + ' - ' + p.modelo;
+            document.getElementById('autonomia').textContent = p.autonomiaKm + ' km';
+            document.getElementById('tarifa').textContent = p.tarifa && p.tarifa.valorHora ? '$' + p.tarifa.valorHora.toLocaleString('es') : '$18.000 COP';
+            document.getElementById('deposito').textContent = '$50.000 COP';
+            document.getElementById('comision').textContent = '$18.000 COP';
+            document.getElementById('total').textContent = '$122.000 COP';
+          }
+        } catch (e) { }
+      }
+    })();
+  </script>
+</body>
+
+</html>

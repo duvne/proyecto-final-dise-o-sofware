@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Explorar patinetas | VOLT</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="wrap nav"><a class="brand" href="index.html">ϟ <b>VOLT</b></a>
+      <nav class="navlinks"><a href="index.html">Explorar</a><a href="#como-funciona">Cómo funciona</a><a
+          href="publicar.html">Publicar patineta</a></nav>
+      <div class="navright"><a href="admin.html" data-admin-only hidden>Admin</a><a href="login.html" id="loginButton">Iniciar sesión</a><a class="btn small" href="registro.html">Crear cuenta</a></div>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="pagehead">
+      <div class="eyebrow">Alquiler entre particulares</div>
+      <h1>Encuentra tu próxima Patineta</h1>
+      <p class="sub">Compara autonomía, precio y puntos de entrega cercanos en tiempo real.</p>
+    </section>
+    <section class="panel searchbar">
+      <div class="field"><label>Ubicación</label><input id="ubicacion" value="Barranquilla, Atlántico"></div>
+      <div class="field"><label>Inicio</label><input id="inicio" value="25 Nov · 09:00 AM"></div>
+      <div class="field"><label>Devolución</label><input id="devolucion" value="25 Nov · 01:00 PM"></div><button
+        class="btn" id="buscar">Buscar Patinetas</button>
+    </section>
+    <div class="chips"><span class="chip active">Todas</span><span class="chip">Urbana</span><span class="chip">Gran
+        autonomía</span><span class="chip">Compacta</span><span class="chip">Todoterreno</span><span
+        class="results">Patinetas disponibles</span></div>
+    <section class="listing" id="resultados">
+      <p class="muted">Cargando patinetas...</p>
+    </section>
+    <div class="mapbox"><span class="pin green" style="top:28%;left:35%">$18k</span><span class="pin"
+        style="top:65%;left:58%">$12k</span><span class="pin" style="top:43%;left:75%">$15k</span></div>
+    <section class="panel" id="como-funciona" style="padding:24px;margin:24px 0">
+      <div class="eyebrow">Cómo funciona</div>
+      <h2>Reserva en tres pasos</h2>
+      <div class="listing">
+        <article class="card boxpad"><b>1. Explora</b>
+          <p class="muted">Compara patinetas por autonomía, precio y ubicación.</p>
+        </article>
+        <article class="card boxpad"><b>2. Reserva</b>
+          <p class="muted">Elige fecha, confirma la disponibilidad y autoriza el pago.</p>
+        </article>
+        <article class="card boxpad"><b>3. Recibe</b>
+          <p class="muted">Coordina la entrega, revisa el acta y disfruta el recorrido.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+  <div class="modal" id="loginModal" hidden>
+    <div class="modal-card">
+      <h2>Iniciar sesión</h2>
+      <div id="loginError" class="notice"></div>
+      <form id="loginForm">
+        <div class="field"><label>Correo</label><input id="loginEmail" type="email" autocomplete="username"
+            placeholder="admin@volt.local" required></div>
+        <div class="field"><label>Contraseña</label><input id="loginPassword" type="password"
+            autocomplete="current-password" required></div>
+        <div class="row-actions"><button class="btn" type="submit">Entrar</button> <button class="btn light"
+            type="button" id="loginClose">Cancelar</button></div>
+      </form>
+    </div>
+  </div>
+  <footer class="footer">
+    <div class="wrap">VOLT · Alquiler entre particulares · Barranquilla, Colombia</div>
+  </footer>
+  <script src="js/app.js?v=5"></script>
+  <script src="js/login.js?v=5"></script>
+  <script>
+    (async function () {
+      const lista = document.getElementById('resultados');
+      async function cargar(categoria) {
+        try {
+          const url = categoria ? '/api/catalogo/patinetas?categoria=' + encodeURIComponent(categoria) : '/api/catalogo/patinetas';
+          const patinetas = await fetchJson(url);
+          lista.innerHTML = patinetas.length
+            ? patinetas.map(p => '<article class="card scooter-card"><div class="scooter-img"><span class="tag">' + (p.categoria || '') + '</span><span class="scooter-shape">🛴</span></div><div class="scooter-body"><h3>' + p.marca + ' ' + p.modelo + '<span class="rating">★ ' + (p.calificacionPromedio || 4.8).toFixed(1) + '</span></h3><div class="muted">Autonomía: ' + p.autonomiaKm + ' km</div><div class="price">$' + ((p.tarifa && p.tarifa.valorHora) || 15000).toLocaleString('es') + ' <small>COP/h</small></div><div class="muted">Depósito: $50.000</div><a class="btn dark" href="detalle.html?id=' + encodeURIComponent(p.id || p._id) + '">Ver detalle</a></div></article>').join('')
+            : '<p class="muted">No hay patinetas disponibles ahora.</p>';
+          document.querySelector('.results').textContent = 'Patinetas disponibles · ' + patinetas.length + ' resultados';
+        } catch (error) { showError(lista, 'No se pudo cargar el catálogo.'); }
+      }
+      document.getElementById('buscar').addEventListener('click', () => cargar(document.getElementById('ubicacion').value));
+      document.querySelectorAll('.chips .chip').forEach(chip => chip.addEventListener('click', function () {
+        document.querySelectorAll('.chips .chip').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+        cargar(this.textContent);
+      }));
+      cargar();
+    })();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel propietario | VOLT</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="wrap nav"><a class="brand" href="index.html">ϟ <b>VOLT</b></a>
+      <nav class="navlinks"><a href="index.html">Explorar</a><a href="publicar.html">Publicar patineta</a></nav>
+      <div class="navright"><a href="admin.html" data-admin-only hidden>Admin</a><a href="index.html">Volver</a></div>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="pagehead">
+      <div class="eyebrow">Panel de propietario</div>
+      <h1>Panel del Propietario</h1>
+      <p class="sub">Resumen financiero y mis patinetas.</p>
+    </section>
+    <div id="error" class="notice"></div>
+    <section class="dashboard-stats">
+      <div class="card" id="ganancia"><strong>$0 COP</strong><span>Ganancia neta</span></div>
+      <div class="card" id="comision"><strong>$0 COP</strong><span>Comisión de plataforma (15%)</span></div>
+      <div class="card" id="pagosPendientes"><strong>$0 COP</strong><span>Pagos pendientes</span></div>
+    </section>
+    <section class="dashboard-grid">
+      <div class="card boxpad">
+        <h2>Mis Patinetas</h2>
+        <div id="lista" class="list-row">
+          <p class="muted">Cargando...</p>
+        </div>
+      </div>
+      <div class="card boxpad">
+        <h2>Próximos alquileres</h2>
+        <div id="proximos" class="list-row">
+          <p class="muted">Sin próximos alquileres.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="wrap">VOLT · Alquiler entre particulares</div>
+  </footer>
+  <script src="js/app.js?v=5"></script>
+  <script>
+    (async function () {
+      if (!getStoredToken()) {
+        location.replace('login.html?redirect=propietario.html');
+        return;
+      }
+      const list = document.getElementById('lista'), proximos = document.getElementById('proximos'), error = document.getElementById('error');
+      async function cargar() {
+        try {
+          const patinetas = await fetchJson('/api/catalogo/mis-patinetas');
+          list.innerHTML = patinetas.length ? patinetas.map(p => '<div class="list-row"><div class="mini-scooter">🛴</div><b>' + p.marca + ' ' + p.modelo + '</b><span class="muted">' + (p.estadoPublicacion || 'BORRADOR') + '</span><span class="status">' + p.activa + '</span><a class="btn light small" href="publicar.html">Editar</a><button class="btn danger small" type="button" style="margin-left:8px" data-eliminar="' + encodeURIComponent(p.id || p._id) + '">Borrar</button></div>').join('') : '<p class="muted">No tienes patinetas.</p>';
+          proximos.innerHTML = '<p class="muted">Consulta las reservas en la interfaz web.</p>';
+          document.getElementById('ganancia').querySelector('strong').textContent = '$1.245.000 COP';
+          document.getElementById('comision').querySelector('strong').textContent = '$219.000 COP';
+          document.querySelectorAll('[data-eliminar]').forEach(a => a.addEventListener('click', async (ev) => {
+            ev.preventDefault();
+            if (!confirm('¿Seguro que quieres borrar esta patineta?')) return;
+            try {
+              await fetchJson('/api/catalogo/mis-patinetas/' + a.dataset.eliminar, { method: 'DELETE' });
+              await cargar();
+            } catch (e) { showError(error, e.message); }
+          }));
+        } catch (e) { showError(error, e.message); }
+      }
+      cargar();
+    })();
+  </script>
+</body>
+
+</html>

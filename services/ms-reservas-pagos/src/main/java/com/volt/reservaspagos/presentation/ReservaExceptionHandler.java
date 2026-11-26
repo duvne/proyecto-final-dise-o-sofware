@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.mongodb.MongoExecutionTimeoutException;
 import com.mongodb.MongoTimeoutException;
-import org.springframework.dao.DataAccessException;
 import com.volt.reservaspagos.model.domain.AccesoDenegadoException;
 import com.volt.reservaspagos.model.domain.CuponInvalidoException;
 import com.volt.reservaspagos.model.domain.EstadoReservaInvalidoException;
@@ -19,8 +18,6 @@ import com.volt.reservaspagos.model.domain.FranjaOcupadaException;
 import com.volt.reservaspagos.model.domain.ReservaNoEncontradaException;
 import com.volt.reservaspagos.model.domain.ServicioNoDisponibleException;
 import com.volt.shared.api.ApiError;
-
-import org.postgresql.util.PSQLException;
 
 @RestControllerAdvice
 public class ReservaExceptionHandler {
@@ -58,7 +55,7 @@ public class ReservaExceptionHandler {
 	}
 
 	@ExceptionHandler({ MongoExecutionTimeoutException.class, MongoTimeoutException.class,
-			DataAccessException.class, ServicioNoDisponibleException.class })
+			ServicioNoDisponibleException.class })
 	public ResponseEntity<ApiError> servicioNoDisponible(RuntimeException exception) {
 		return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
 				.body(ApiError.de("Servicio no disponible", exception.getMessage()));

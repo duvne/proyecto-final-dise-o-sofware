@@ -1,0 +1,80 @@
+[INFO] Scanning for projects...
+[INFO] Loaded 24627 auto-discovered prefixes for remote repository central (prefixes-central.txt)
+[INFO] 
+[INFO] ---------------------< com.volt:ms-catalogo-flota >---------------------
+[INFO] Building ms-catalogo-flota 1.0.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:4.2.0:run (default-cli) > test-compile @ ms-catalogo-flota >>>
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ ms-catalogo-flota ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.16.0:compile (default-compile) @ ms-catalogo-flota ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ ms-catalogo-flota ---
+[INFO] skip non existing resourceDirectory C:\Users\duvan\OneDrive\Documentos\visual code\proyecto-final-dise�o-sofware\proyecto-final-dise�o-sofware\services\ms-catalogo-flota\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ ms-catalogo-flota ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] <<< spring-boot:4.2.0:run (default-cli) < test-compile @ ms-catalogo-flota <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:4.2.0:run (default-cli) @ ms-catalogo-flota ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.2.0)
+
+2026-11-25T19:02:05.264-05:00  INFO 23848 --- [ms-catalogo-flota] [           main] c.v.c.CatalogoFlotaApplication           : Starting CatalogoFlotaApplication using Java 25.0.5.1 with PID 23848 (C:\Users\duvan\OneDrive\Documentos\visual code\proyecto-final-diseño-sofware\proyecto-final-diseño-sofware\services\ms-catalogo-flota\target\classes started by duvan in C:\Users\duvan\OneDrive\Documentos\visual code\proyecto-final-diseño-sofware\proyecto-final-diseño-sofware\services\ms-catalogo-flota)
+2026-11-25T19:02:05.268-05:00  INFO 23848 --- [ms-catalogo-flota] [           main] c.v.c.CatalogoFlotaApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-11-25T19:02:06.765-05:00  INFO 23848 --- [ms-catalogo-flota] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8083 (http)
+2026-11-25T19:02:06.781-05:00  INFO 23848 --- [ms-catalogo-flota] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-11-25T19:02:06.782-05:00  INFO 23848 --- [ms-catalogo-flota] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.27]
+2026-11-25T19:02:06.848-05:00  INFO 23848 --- [ms-catalogo-flota] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1523 ms
+2026-11-25T19:02:07.240-05:00  INFO 23848 --- [ms-catalogo-flota] [           main] org.mongodb.driver.client                : MongoClient with metadata {"driver": {"name": "mongo-java-driver|spring-boot|sync", "version": "5.13.0"}, "os": {"type": "Windows", "name": "Windows 11", "architecture": "amd64", "version": "10.0"}, "platform": "Java/Eclipse Adoptium/25.0.5.1+2-LTS"} created with settings MongoClientSettings{readPreference=primary, writeConcern=WriteConcern{w=null, wTimeout=null ms, journal=null}, retryWrites=true, retryReads=true, maxAdaptiveRetries=null, enableOverloadRetargeting=false, readConcern=ReadConcern{level=null}, credential=MongoCredential{mechanism=null, userName='duvanjavier159_db_user', source='admin', password=<hidden>, mechanismProperties=<hidden>}, transportSettings=null, commandListeners=[io.micrometer.core.instrument.binder.mongodb.MongoMetricsCommandListener@7f5614f9], codecRegistry=ProvidersCodecRegistry{codecProviders=[ValueCodecProvider{}, BsonValueCodecProvider{}, DBRefCodecProvider{}, DBObjectCodecProvider{}, DocumentCodecProvider{}, CollectionCodecProvider{}, IterableCodecProvider{}, MapCodecProvider{}, GeoJsonCodecProvider{}, GridFSFileCodecProvider{}, Jsr310CodecProvider{}, JsonObjectCodecProvider{}, BsonCodecProvider{}, com.mongodb.client.model.mql.ExpressionCodecProvider@480cbe2e, com.mongodb.Jep395RecordCodecProvider@6c3f1658, com.mongodb.KotlinCodecProvider@110e9982, EnumCodecProvider{}]}, loggerSettings=LoggerSettings{maxDocumentLength=1000}, clusterSettings={hosts=[127.0.0.1:27017], srvHost=patinetas.un4fxyk.mongodb.net, srvServiceName=mongodb, mode=MULTIPLE, requiredClusterType=REPLICA_SET, requiredReplicaSetName='atlas-o12dho-shard-0', serverSelector='null', clusterListeners='[]', serverSelectionTimeout='30000 ms', localThreshold='15 ms'}, socketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=0, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=<hidden>, password=<hidden>}}, heartbeatSocketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=10000, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=<hidden>, password=<hidden>}}, connectionPoolSettings=ConnectionPoolSettings{maxSize=100, minSize=0, maxWaitTimeMS=120000, maxConnectionLifeTimeMS=0, maxConnectionIdleTimeMS=0, maintenanceInitialDelayMS=0, maintenanceFrequencyMS=60000, connectionPoolListeners=[io.micrometer.core.instrument.binder.mongodb.MongoMetricsConnectionPoolListener@5eb0a686], maxConnecting=2}, serverSettings=ServerSettings{heartbeatFrequencyMS=10000, minHeartbeatFrequencyMS=500, serverMonitoringMode=AUTO, serverListeners='[]', serverMonitorListeners='[]'}, sslSettings=SslSettings{enabled=true, invalidHostNameAllowed=false, context=null}, applicationName='null', compressorList=[], uuidRepresentation=UNSPECIFIED, serverApi=null, autoEncryptionSettings=null, dnsClient=null, inetAddressResolver=null, contextProvider=null, timeoutMS=null}
+2026-11-25T19:02:07.279-05:00  INFO 23848 --- [ms-catalogo-flota] [xyk.mongodb.net] org.mongodb.driver.cluster               : Adding discovered server ac-swxmkpi-shard-00-01.un4fxyk.mongodb.net:27017 to client view of cluster
+2026-11-25T19:02:07.309-05:00  INFO 23848 --- [ms-catalogo-flota] [xyk.mongodb.net] org.mongodb.driver.cluster               : Adding discovered server ac-swxmkpi-shard-00-00.un4fxyk.mongodb.net:27017 to client view of cluster
+2026-11-25T19:02:07.310-05:00  INFO 23848 --- [ms-catalogo-flota] [xyk.mongodb.net] org.mongodb.driver.cluster               : Adding discovered server ac-swxmkpi-shard-00-02.un4fxyk.mongodb.net:27017 to client view of cluster
+2026-11-25T19:02:07.700-05:00  WARN 23848 --- [ms-catalogo-flota] [           main] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: c433a422-79f4-4368-8ad4-90f884fdd984
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-11-25T19:02:07.709-05:00  INFO 23848 --- [ms-catalogo-flota] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-11-25T19:02:07.815-05:00  INFO 23848 --- [ms-catalogo-flota] [ngodb.net:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=ac-swxmkpi-shard-00-01.un4fxyk.mongodb.net:27017, type=REPLICA_SET_PRIMARY, cryptd=false, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=25, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=311872900, minRoundTripTimeNanos=0, setName='atlas-o12dho-shard-0', canonicalAddress=ac-swxmkpi-shard-00-01.un4fxyk.mongodb.net:27017, hosts=[ac-swxmkpi-shard-00-00.un4fxyk.mongodb.net:27017, ac-swxmkpi-shard-00-02.un4fxyk.mongodb.net:27017, ac-swxmkpi-shard-00-01.un4fxyk.mongodb.net:27017], passives=[], arbiters=[], primary='ac-swxmkpi-shard-00-01.un4fxyk.mongodb.net:27017', tagSet=TagSet{[Tag{name='availabilityZone', value='use1-az1'}, Tag{name='cacheState', value='READY'}, Tag{name='diskState', value='READY'}, Tag{name='nodeType', value='ELECTABLE'}, Tag{name='provider', value='AWS'}, Tag{name='region', value='US_EAST_1'}, Tag{name='workloadType', value='OPERATIONAL'}]}, electionId=7fffffff0000000000000221, setVersion=258, topologyVersion=TopologyVersion{processId=6b0469bfc97fb6d7a5b1ef03, counter=12}, lastWriteDate=Wed Nov 25 19:02:11 GMT-05:00 2026, lastUpdateTimeNanos=18045806763300}
+2026-11-25T19:02:07.816-05:00  INFO 23848 --- [ms-catalogo-flota] [ngodb.net:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=ac-swxmkpi-shard-00-00.un4fxyk.mongodb.net:27017, type=REPLICA_SET_SECONDARY, cryptd=false, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=25, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=304860200, minRoundTripTimeNanos=0, setName='atlas-o12dho-shard-0', canonicalAddress=ac-swxmkpi-shard-00-00.un4fxyk.mongodb.net:27017, hosts=[ac-swxmkpi-shard-00-00.un4fxyk.mongodb.net:27017, ac-swxmkpi-shard-00-02.un4fxyk.mongodb.net:27017, ac-swxmkpi-shard-00-01.un4fxyk.mongodb.net:27017], passives=[], arbiters=[], primary='ac-swxmkpi-shard-00-01.un4fxyk.mongodb.net:27017', tagSet=TagSet{[Tag{name='availabilityZone', value='use1-az6'}, Tag{name='cacheState', value='READY'}, Tag{name='diskState', value='READY'}, Tag{name='nodeType', value='ELECTABLE'}, Tag{name='provider', value='AWS'}, Tag{name='region', value='US_EAST_1'}, Tag{name='workloadType', value='OPERATIONAL'}]}, electionId=null, setVersion=258, topologyVersion=TopologyVersion{processId=6b04694873a65e895f1734d9, counter=10}, lastWriteDate=Wed Nov 25 19:02:11 GMT-05:00 2026, lastUpdateTimeNanos=18045806810000}
+2026-11-25T19:02:07.816-05:00  INFO 23848 --- [ms-catalogo-flota] [ngodb.net:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=ac-swxmkpi-shard-00-02.un4fxyk.mongodb.net:27017, type=REPLICA_SET_SECONDARY, cryptd=false, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=25, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=312382600, minRoundTripTimeNanos=0, setName='atlas-o12dho-shard-0', canonicalAddress=ac-swxmkpi-shard-00-02.un4fxyk.mongodb.net:27017, hosts=[ac-swxmkpi-shard-00-00.un4fxyk.mongodb.net:27017, ac-swxmkpi-shard-00-02.un4fxyk.mongodb.net:27017, ac-swxmkpi-shard-00-01.un4fxyk.mongodb.net:27017], passives=[], arbiters=[], primary='ac-swxmkpi-shard-00-01.un4fxyk.mongodb.net:27017', tagSet=TagSet{[Tag{name='availabilityZone', value='use1-az2'}, Tag{name='cacheState', value='READY'}, Tag{name='diskState', value='READY'}, Tag{name='nodeType', value='ELECTABLE'}, Tag{name='provider', value='AWS'}, Tag{name='region', value='US_EAST_1'}, Tag{name='workloadType', value='OPERATIONAL'}]}, electionId=null, setVersion=258, topologyVersion=TopologyVersion{processId=6b046a34b28e942020ce8874, counter=9}, lastWriteDate=Wed Nov 25 19:02:11 GMT-05:00 2026, lastUpdateTimeNanos=18045806812800}
+2026-11-25T19:02:07.818-05:00  INFO 23848 --- [ms-catalogo-flota] [ngodb.net:27017] org.mongodb.driver.cluster               : Discovered replica set primary ac-swxmkpi-shard-00-01.un4fxyk.mongodb.net:27017 with max election id 7fffffff0000000000000221 and max set version 258
+2026-11-25T19:02:08.323-05:00  INFO 23848 --- [ms-catalogo-flota] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
+2026-11-25T19:02:08.372-05:00  INFO 23848 --- [ms-catalogo-flota] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8083 (http) with context path '/'
+2026-11-25T19:02:08.382-05:00  INFO 23848 --- [ms-catalogo-flota] [           main] c.v.c.CatalogoFlotaApplication           : Started CatalogoFlotaApplication in 3.623 seconds (process running for 4.041)
+2026-11-25T19:02:08.993-05:00  WARN 23848 --- [ms-catalogo-flota] [           main] o.s.core.events.SpringDocAppInitializer  : SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production, set the property 'springdoc.api-docs.enabled=false'
+2026-11-25T19:02:09.000-05:00  WARN 23848 --- [ms-catalogo-flota] [           main] o.s.core.events.SpringDocAppInitializer  : SpringDoc /swagger-ui.html endpoint is enabled by default. To disable it in production, set the property 'springdoc.swagger-ui.enabled=false'
+2026-11-25T19:02:25.020-05:00  INFO 23848 --- [ms-catalogo-flota] [nio-8083-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-11-25T19:02:25.030-05:00  INFO 23848 --- [ms-catalogo-flota] [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-11-25T19:02:25.031-05:00  INFO 23848 --- [ms-catalogo-flota] [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+[INFO] ------------------------------------------------------------------------
+[ERROR] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  01:17 min
+[INFO] Finished at: 2026-11-25T19:03:19-05:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:4.2.0:run (default-cli) on project ms-catalogo-flota: Process terminated with exit code: -1 -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException

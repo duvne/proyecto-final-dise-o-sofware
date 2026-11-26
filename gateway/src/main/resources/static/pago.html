@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Confirmar pago | VOLT</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="wrap nav"><a class="brand" href="index.html">ϟ <b>VOLT</b></a>
+      <nav class="navlinks"><a href="index.html">Explorar</a><a href="publicar.html">Publicar patineta</a>
+    </div>
+    </nav>
+    <div class="navright"><a href="index.html">Volver</a></div>
+  </header>
+  <main class="wrap">
+    <section class="pagehead">
+      <h1>Confirma y autoriza tu Pago</h1>
+      <p class="sub">Revisa los importes y autoriza.</p>
+    </section>
+    <div id="error" class="notice"></div>
+    <section class="two-col">
+      <section class="card boxpad">
+        <h2>Datos de reserva</h2>
+        <div class="field"><label>Patineta</label><input id="patineta" value="Volt City Pro - Modelo 2025" readonly>
+        </div><br>
+        <div class="field"><label>Recogida</label><input id="inicio" value="25 Nov 2026 · 09:00 AM" readonly></div><br>
+        <div class="field"><label>Devolución</label><input id="fin" value="25 Nov 2026 · 01:00 PM" readonly></div><br>
+        <h2>Método de pago</h2>
+        <div class="step active">Tarjeta terminada en 4589 · Exp 08/29</div>
+        <p class="muted">El depósito se autoriza temporalmente y se libera al finalizar correctamente.</p>
+      </section>
+      <aside class="card boxpad">
+        <h2>Resumen</h2>
+        <div class="sumrow"><span>Alquiler (4 horas)</span><strong id="alquiler">$72.000 COP</strong></div>
+        <div class="sumrow"><span>Depósito reembursable</span><strong id="deposito">$50.000 COP</strong></div>
+        <div class="sumrow"><strong>Total autorizado</strong><span id="total" class="total">$122.000 COP</span></div>
+        <button class="btn" style="width:100%;margin:15px 0" id="autorizar">Autorizar pago</button>
+      </aside>
+    </section>
+    <section class="card boxpad">
+      <h2>Estado de reserva</h2>
+      <div class="steps">
+        <div class="step active">1. Solicitada (Actual)</div>
+        <div class="step">2. Confirmada</div>
+        <div class="step">3. En curso</div>
+        <div class="step">4. Finalizada</div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="wrap">VOLT · Alquiler entre particulares</div>
+  </footer>
+  <script src="js/app.js?v=5"></script>
+  <script>
+    (async function () {
+      if (!getStoredToken()) {
+        location.replace('login.html?redirect=pago.html');
+        return;
+      }
+      const error = document.getElementById('error'), total = document.getElementById('total'), alquiler = document.getElementById('alquiler');
+      document.getElementById('autorizar').addEventListener('click', async () => {
+        try {
+          const inicio = new Date(Date.now() + 3600000).toISOString();
+          const fin = new Date(Date.now() + 6 * 3600000).toISOString();
+          const reserva = await fetchJson('/api/reservas', {
+            method: 'POST',
+            body: { idPatineta: document.getElementById('patineta').value, fechaInicio: inicio, fechaFin: fin }
+          });
+          total.textContent = '$' + (Number(reserva.totalAlquiler || 72000) + Number(reserva.deposito.montoRetenido || 50000)).toLocaleString('es') + ' COP';
+          alert('Reserva creada. El propietario aún debe aprobarla.');
+        } catch (e) { showError(error, e.message); }
+      });
+    })();
+  </script>
+</body>
+
+</html>

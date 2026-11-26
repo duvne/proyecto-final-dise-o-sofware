@@ -141,6 +141,11 @@ public class PatinetaMongoDAOImpl implements IPatinetaDAO {
 	}
 
 	@Override
+	public void eliminar(String id) {
+		collection.deleteOne(Filters.eq("_id", id));
+	}
+
+	@Override
 	public void actualizarCalificacion(String id, double promedio, int totalCalificaciones) {
 		collection.updateOne(Filters.eq("_id", id), Updates.combine(
 				Updates.set("calificacion_promedio", promedio),

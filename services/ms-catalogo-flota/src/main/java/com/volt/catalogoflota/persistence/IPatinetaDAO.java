@@ -22,5 +22,7 @@ public interface IPatinetaDAO {
 
 	PatinetaPage buscarActivas(FiltroPatinetas filtros);
 
+	void eliminar(String id);
+
 	void actualizarCalificacion(String id, double promedio, int totalCalificaciones);
 }

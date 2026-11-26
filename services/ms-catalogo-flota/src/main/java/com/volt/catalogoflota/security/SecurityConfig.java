@@ -1,12 +1,7 @@
 package com.volt.catalogoflota.security;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.config.ObjectPostProcessor;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -17,25 +12,14 @@ import com.volt.shared.security.JwtTokenService;
 import com.volt.shared.security.SecurityErrors;
 
 @Configuration
-@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
-@EnableMethodSecurity
 public class SecurityConfig {
 	@Bean
-	SecurityFilterChain securityFilterChain(JwtTokenService jwtTokenService) throws Exception {
-		HttpSecurity http = new HttpSecurity(ObjectPostProcessor.identity(),
-				new AuthenticationManagerBuilder(ObjectPostProcessor.identity()), java.util.Map.of());
+	SecurityFilterChain securityFilterChain(HttpSecurity http, JwtTokenService jwtTokenService) throws Exception {
 		return http
 				.csrf(csrf -> csrf.disable())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-						.requestMatchers("/actuator/health", "/actuator/info",
-								"/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-						.requestMatchers(HttpMethod.GET,
-								"/api/catalogo/patinetas",
-								"/api/catalogo/patinetas/**",
-								"/api/catalogo/categorias/**",
-								"/api/catalogo/zonas/**").permitAll()
+						.requestMatchers("/api/catalogo/patinetas", "/api/catalogo/patinetas/**").permitAll()
 						.anyRequest().authenticated())
 				.exceptionHandling(exceptions -> exceptions
 						.authenticationEntryPoint((request, response, exception) ->
@@ -43,8 +27,6 @@ public class SecurityConfig {
 						.accessDeniedHandler((request, response, exception) ->
 								SecurityErrors.forbidden(response, "No tienes permisos para esta operacion.")))
 				.addFilterBefore(new JwtAuthenticationFilter(jwtTokenService), UsernamePasswordAuthenticationFilter.class)
-				.httpBasic(basic -> basic.disable())
-				.formLogin(form -> form.disable())
 				.build();
 	}
 }
