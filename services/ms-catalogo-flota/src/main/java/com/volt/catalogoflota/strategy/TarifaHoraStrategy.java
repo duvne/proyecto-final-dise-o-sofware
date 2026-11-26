@@ -4,6 +4,11 @@ package com.volt.catalogoflota.strategy;
  * Estrategia de tarifa por hora.
  * Cobra una tarifa fija por cada hora completa o fracción de hora.
  */
+import java.math.BigDecimal;
+
+import org.springframework.stereotype.Component;
+
+@Component
 public class TarifaHoraStrategy implements TarifaStrategy {
 
     // Tarifa base por hora (ej: $2.50 por hora)

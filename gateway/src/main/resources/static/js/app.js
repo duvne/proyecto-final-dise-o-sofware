@@ -88,10 +88,12 @@ function authHeaders() {
 }
 
 async function fetchJson(path, options = {}) {
-  const { method = 'GET', body, headers = {} } = options;
+  const { method = 'GET', body, headers = {}, skipAuth = false } = options;
+  const auth = skipAuth ? {} : authHeaders();
+  const contentType = body !== undefined ? { 'Content-Type': 'application/json' } : {};
   const res = await fetch(path, {
     method,
-    headers: { ...authHeaders(), ...headers },
+    headers: { ...contentType, ...auth, ...headers },
     body: body === undefined ? undefined : JSON.stringify(body)
   });
   if (!res.ok) {

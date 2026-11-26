@@ -1,14 +1,13 @@
 package com.volt.reservaspagos.persistence;
 
-import com.volt.reservaspagos.model.domain.PagoInfo;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
+import java.util.List;
+import java.util.Optional;
 
-@Repository
-public interface IPagoDAO extends MongoRepository<PagoInfo, String> {
-    // Métodos para búsqueda por estado
-    List<PagoInfo> findByEstado(String estado);
-    
-    // Método para encontrar el pago más reciente
-    PagoInfo findTopByOrderByFechaPagoDesc();
+import com.volt.reservaspagos.model.domain.PagoInfo;
+
+public interface IPagoDAO {
+    PagoInfo guardar(PagoInfo pago);
+    Optional<PagoInfo> buscarPorId(String id);
+    List<PagoInfo> listarPorEstado(String estado);
+    long contar();
 }

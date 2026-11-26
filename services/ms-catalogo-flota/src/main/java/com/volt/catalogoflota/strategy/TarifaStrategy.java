@@ -4,6 +4,8 @@ package com.volt.catalogoflota.strategy;
  * Estrategia base para cálculo de tarifas de patinetas.
  * Define el contrato que deben implementar todas las estrategias de tarifa.
  */
+import java.math.BigDecimal;
+
 public interface TarifaStrategy {
     /**
      * Calcula el costo total de una tarifa dada una duración en minutos.

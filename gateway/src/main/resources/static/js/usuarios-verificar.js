@@ -43,7 +43,10 @@
   }
 
   async function fetchJson(path, options = {}) {
-    const res = await fetch(path, { ...options, headers: { ...authHeaders(), ...(options.headers || {}) } });
+    const { skipAuth = false, ...rest } = options;
+    const auth = skipAuth ? {} : authHeaders();
+    const contentType = rest.body !== undefined ? { 'Content-Type': 'application/json' } : {};
+    const res = await fetch(path, { ...rest, headers: { ...contentType, ...auth, ...(rest.headers || {}) } });
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
       const message = data.detalle || data.error || data.message || res.statusText;

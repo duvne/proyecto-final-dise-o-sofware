@@ -4,6 +4,11 @@ package com.volt.catalogoflota.strategy;
  * Estrategia de tarifa por día.
  * Cobra una tarifa plana por uso diario (24 horas).
  */
+import java.math.BigDecimal;
+
+import org.springframework.stereotype.Component;
+
+@Component
 public class TarifaDiaStrategy implements TarifaStrategy {
 
     // Tarifa plana por día completo (ej: $15.00 por día)

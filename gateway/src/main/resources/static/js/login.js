@@ -27,7 +27,8 @@ async function loginSubmit(event) {
   try {
     const data = await fetchJson('/api/auth/login', {
       method: 'POST',
-      body: { correo, contrasena: password }
+      body: { correo, contrasena: password },
+      skipAuth: true
     });
     saveSession(data);
     if (loginModalElement()) {
